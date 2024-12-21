@@ -1,168 +1,215 @@
 <template>
   <Motion
-    ref="cardRef"
-    class="skill-card h-full perspective-1000"
-    :class="{ 
-      'reduce-motion': prefersReducedMotion,
-      'skill-card--hover': isHovered,
-      [`skill-card--${props.level.toLowerCase()}`]: true
+    :initial="{ opacity: 0, scale: 0.96, y: 24 }"
+    :animate="{
+      opacity: 1,
+      scale: isCentered ? 1.08 : 1,
+      y: isCentered ? -10 : 0
     }"
-    v-bind="motionProps"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
+    :transition="{ duration: 0.6 }"
+    :whileHover="{
+      scale: isCentered ? 1.16 : 1.08,
+      y: isCentered ? -24 : -10,
+      boxShadow: isDark 
+        ? '0 12px 36px 0 rgba(52, 211, 153, 0.25), 0 2px 0 0 #10b981' 
+        : '0 12px 36px 0 rgba(16, 185, 129, 0.18), 0 2px 0 0 #059669',
+      filter: 'brightness(1.04) saturate(1.1)'
+    }"
+    :whileFocus="{
+      scale: isCentered ? 1.16 : 1.08,
+      y: isCentered ? -24 : -10,
+      boxShadow: isDark 
+        ? '0 12px 36px 0 rgba(52, 211, 153, 0.25), 0 2px 0 0 #10b981' 
+        : '0 12px 36px 0 rgba(16, 185, 129, 0.18), 0 2px 0 0 #059669',
+      filter: 'brightness(1.04) saturate(1.1)'
+    }"
+    class="skill-card group relative flex flex-col items-center justify-center w-full h-full min-h-[20rem] max-h-[20rem] min-w-[18rem] max-w-[24rem] backdrop-blur-md rounded-2xl border shadow-lg transition-all duration-500 ease-out overflow-hidden select-none"
+    :class="[
+      isDark 
+        ? 'bg-slate-900/90 border-slate-700/40' 
+        : 'bg-white/80 border-white/20',
+      {
+        'ring-4 shadow-emerald-200 dark:shadow-emerald-900': isCentered,
+        'z-20': isCentered,
+        'z-10': !isCentered,
+        'hover:border-emerald-600 dark:hover:border-emerald-400': true
+      },
+      isCentered 
+        ? isDark 
+          ? 'ring-emerald-500/50' 
+          : 'ring-emerald-400/40'
+        : ''
+    ]"
+    style="box-sizing: border-box;"
+    tabindex="0"
   >
-    <!-- Enhanced 3D card structure -->
-    <div
-      class="group relative flex h-full transform-gpu flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-xl transition-all duration-500 ease-out hover:border-white/30 dark:bg-slate-800/20 dark:backdrop-blur-xl"
-      :style="{
-        '--card-scale': isHovered ? 1.02 : 1,
-        '--card-rotate-x': isHovered ? 2 : 0,
-        '--card-rotate-y': isHovered ? 2 : 0,
-        '--card-y': isHovered ? -4 : 0,
-        '--card-glow': isHovered ? '0 0 30px rgba(255, 255, 255, 0.15)' : '0 0 20px rgba(255, 255, 255, 0.1)',
-        '--card-depth': isHovered ? '20px' : '0px'
-      }"
-    >
-      <!-- Enhanced 3D layers -->
-      <div class="absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 dark:from-white/10 dark:via-white/5 dark:to-white/0 rounded-2xl transition-all duration-500 transform-gpu" :style="{ transform: `translateZ(calc(var(--card-depth) * 0.5))` }"></div>
-      <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-blue-400/10 dark:via-purple-400/10 dark:to-pink-400/10 rounded-2xl mix-blend-overlay transition-all duration-500 transform-gpu" :style="{ transform: `translateZ(calc(var(--card-depth) * 0.3))` }"></div>
-      
-      <!-- Animated border with depth -->
-      <div 
-        class="absolute inset-0 rounded-2xl border border-white/20 transition-all duration-500 transform-gpu"
-        :class="{ 'border-white/40': isHovered }"
-        :style="{ transform: `translateZ(calc(var(--card-depth) * 0.8))` }"
-      ></div>
-      
-      <!-- Content container with enhanced 3D positioning -->
-      <div class="relative z-10 flex flex-col flex-grow items-center text-center transition-all duration-500 transform-gpu" :style="{ transform: `translateZ(var(--card-depth))` }">
-        <!-- Icon with enhanced floating animation -->
-        <div 
-          ref="iconRef" 
-          class="mb-4 transform-gpu transition-all duration-500"
-          :class="{ 'animate-float-enhanced': !prefersReducedMotion }"
-        >
-          <div 
-            class="p-3 rounded-full backdrop-blur-sm transition-all duration-500 transform-gpu"
-            :class="{
-              'bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-400/20 dark:to-purple-400/20': !isHovered,
-              'bg-gradient-to-br from-blue-500/30 to-purple-500/30 dark:from-blue-400/30 dark:to-purple-400/30': isHovered
-            }"
-            :style="{ transform: `translateZ(calc(var(--card-depth) * 1.2))` }"
-          >
-            <template v-if="props.logo">
-              <img :src="props.logo" :alt="props.name" class="w-10 h-10 object-contain" />
-            </template>
-            <template v-else>
-              <component 
-                :is="`heroicons-outline:${props.icon}`" 
-                class="w-8 h-8 text-white dark:text-white/90 transform-gpu transition-all duration-500"
-                :class="{ 'scale-110 rotate-3': isHovered }"
-              />
-            </template>
-          </div>
+    <!-- Glow effect when centered -->
+    <Motion
+      v-if="isCentered"
+      :initial="{ opacity: 0, scale: 0.9 }"
+      :animate="{ opacity: 0.7, scale: 1.18 }"
+      :transition="{ duration: 0.5 }"
+      class="absolute -inset-2 rounded-3xl blur-2xl pointer-events-none animate-pulse"
+      :class="[
+        isDark 
+          ? 'bg-gradient-to-br from-emerald-500/25 via-teal-500/20 to-emerald-300/12' 
+          : 'bg-gradient-to-br from-emerald-400/30 via-teal-400/20 to-emerald-200/10'
+      ]"
+      style="z-index:1;pointer-events:none;"
+    />
+    <!-- Glow sutil en hover/focus -->
+    <Motion
+      :initial="{ opacity: 0, scale: 0.95 }"
+      :whileHover="{ opacity: 0.18, scale: 1.10 }"
+      :whileFocus="{ opacity: 0.18, scale: 1.10 }"
+      :transition="{ duration: 0.4 }"
+      class="absolute -inset-4 rounded-3xl blur-2xl pointer-events-none"
+      :class="[
+        isDark 
+          ? 'bg-gradient-to-br from-emerald-500/30 via-teal-500/20 to-emerald-300/15' 
+          : 'bg-gradient-to-br from-emerald-400/40 via-teal-400/20 to-emerald-200/10'
+      ]"
+      style="z-index:1;pointer-events:none;"
+    />
+    <!-- Content container -->
+    <div class="relative z-10 flex flex-col items-center justify-center w-full h-full px-0 py-0 text-center gap-2">
+      <!-- Logo/Icono sin card -->
+      <Motion
+        :whileHover="{ rotate: 8, scale: 1.15 }"
+        :whileFocus="{ rotate: 8, scale: 1.15 }"
+        :transition="{ duration: 0.4 }"
+        class="mb-2 flex justify-center items-center w-full"
+      >
+        <div class="skill-logo-container">
+          <template v-if="props.logo">
+            <img 
+              :src="props.logo" 
+              :alt="props.name" 
+              class="skill-logo-img"
+            />
+          </template>
+          <template v-else>
+            <component 
+              :is="`heroicons-outline:${props.icon}`" 
+              class="skill-logo-icon"
+              :class="[
+                isDark ? 'text-emerald-400' : 'text-emerald-600'
+              ]"
+            />
+          </template>
         </div>
-
-        <!-- Title with enhanced gradient and depth -->
+      </Motion>
+      <!-- Title -->
+      <Motion
+        :initial="{ opacity: 0, y: 10 }"
+        :animate="{ opacity: 1, y: 0 }"
+        :whileHover="{ scale: 1.04, y: -2 }"
+        :whileFocus="{ scale: 1.04, y: -2 }"
+        :transition="{ duration: 0.4, delay: 0.1 }"
+        class="mb-1 w-full px-2"
+      >
         <h3 
-          class="text-xl font-semibold mb-2 transition-all duration-500 transform-gpu"
-          :class="{
-            'bg-gradient-to-r from-white to-white/80 dark:from-white dark:to-white/80 bg-clip-text text-transparent': !isHovered,
-            'bg-gradient-to-r from-blue-400 to-purple-400 dark:from-blue-300 dark:to-purple-300 bg-clip-text text-transparent': isHovered
-          }"
-          :style="{ transform: `translateZ(calc(var(--card-depth) * 1.1))` }"
+          class="text-lg font-bold transition-colors duration-500 truncate w-full text-center"
+          :class="[
+            isDark 
+              ? 'text-white group-hover:text-emerald-400' 
+              : 'text-slate-900 group-hover:text-emerald-600'
+          ]"
         >
           {{ props.name }}
         </h3>
-
-        <!-- Enhanced level indicator with 3D progress -->
-        <div 
-          class="w-full max-w-[120px] h-1.5 rounded-full overflow-hidden mb-4 transition-all duration-500 transform-gpu"
-          :class="{
-            'bg-white/10': !isHovered,
-            'bg-white/20': isHovered
-          }"
-          :style="{ transform: `translateZ(calc(var(--card-depth) * 0.9))` }"
-        >
-          <div 
-            ref="progressRef"
-            class="h-full rounded-full transform-gpu transition-all duration-500"
-            :class="{
-              'bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400': !isHovered,
-              'bg-gradient-to-r from-blue-400 to-purple-400 dark:from-blue-300 dark:to-purple-300': isHovered
-            }"
-            :style="{ 
-              width: `${getLevelPercentage(props.level)}%`,
-              transform: `translateZ(calc(var(--card-depth) * 1.1))`
-            }"
-          ></div>
-        </div>
-
-        <!-- Enhanced level badge with depth -->
-        <div 
-          class="px-3 py-1 rounded-full text-sm font-medium transition-all duration-500 transform-gpu"
-          :class="{
-            'bg-white/10 text-white/80': !isHovered,
-            'bg-white/20 text-white': isHovered
-          }"
-          :style="{ transform: `translateZ(calc(var(--card-depth) * 1.2))` }"
-        >
-          {{ props.level }}
-        </div>
-      </div>
-
-      <!-- Enhanced hover effect with depth -->
-      <div 
-        class="absolute inset-0 opacity-0 transition-all duration-500 transform-gpu"
-        :class="{ 'opacity-100': isHovered }"
-        :style="{ transform: `translateZ(calc(var(--card-depth) * 0.4))` }"
+      </Motion>
+      <!-- Level indicator -->
+      <Motion
+        :initial="{ opacity: 0, scaleX: 0 }"
+        :animate="{ opacity: 1, scaleX: 1 }"
+        :transition="{ duration: 0.6, delay: 0.2 }"
+        class="w-full max-w-[100px] mb-1"
       >
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-blue-400/10 dark:via-purple-400/10 dark:to-pink-400/10 rounded-2xl mix-blend-overlay"></div>
-      </div>
+        <div 
+          class="w-full h-1.5 rounded-full overflow-hidden"
+          :class="[
+            isDark ? 'bg-slate-700/80' : 'bg-slate-200/80'
+          ]"
+        >
+          <Motion
+            :initial="{ width: 0 }"
+            :animate="{ width: `${getLevelPercentage(props.level)}%` }"
+            :transition="{ duration: 1, delay: 0.4 }"
+            class="h-full rounded-full relative"
+            :class="[
+              isDark ? 'bg-emerald-400' : 'bg-emerald-500'
+            ]"
+          >
+            <!-- Glow/acento al final de la barra -->
+            <span
+              class="absolute right-0 top-0 h-full w-2 rounded-r-full opacity-60"
+              :class="[
+                isDark ? 'bg-emerald-300' : 'bg-emerald-200'
+              ]"
+              v-if="getLevelPercentage(props.level) > 10"
+            />
+          </Motion>
+        </div>
+      </Motion>
+      <!-- Level badge -->
+      <Motion
+        :initial="{ opacity: 0, y: 10 }"
+        :animate="{ opacity: 1, y: 0 }"
+        :whileHover="{ scale: 1.08, y: -2 }"
+        :whileFocus="{ scale: 1.08, y: -2 }"
+        :transition="{ duration: 0.4, delay: 0.3 }"
+        class="px-3 py-1 rounded-full text-xs font-semibold border transition-all duration-300"
+        :class="[
+          isDark 
+            ? 'bg-gradient-to-r from-emerald-400/15 to-teal-400/15 border-emerald-400/30 text-emerald-300' 
+            : 'bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border-emerald-500/20 text-emerald-700'
+        ]"
+      >
+        {{ props.level }}
+      </Motion>
     </div>
+    <!-- Hover border effect -->
+    <Motion
+      :initial="{ opacity: 0, scale: 0.95 }"
+      :whileHover="{ opacity: 1, scale: 1 }"
+      :whileFocus="{ opacity: 1, scale: 1 }"
+      :transition="{ duration: 0.3 }"
+      class="absolute inset-0 rounded-2xl border-2 border-transparent pointer-events-none transition-all duration-300"
+      :class="[
+        isDark 
+          ? 'group-hover:border-emerald-400' 
+          : 'group-hover:border-emerald-600'
+      ]"
+      style="z-index:2;pointer-events:none;"
+    />
+    <!-- Glow extra en hover -->
+    <Motion
+      :initial="{ opacity: 0, scale: 0.95 }"
+      :whileHover="{ opacity: 0.13, scale: 1.12 }"
+      :whileFocus="{ opacity: 0.13, scale: 1.12 }"
+      :transition="{ duration: 0.4 }"
+      class="absolute -inset-4 rounded-3xl blur-2xl pointer-events-none"
+      :class="[
+        isDark 
+          ? 'bg-gradient-to-br from-emerald-500/25 via-teal-500/20 to-emerald-300/12' 
+          : 'bg-gradient-to-br from-emerald-400/30 via-teal-400/20 to-emerald-200/10'
+      ]"
+      style="z-index:1;pointer-events:none;"
+    />
   </Motion>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import type { Skill } from '~/types'
-import gsap from 'gsap'
 import { Motion } from '@motionone/vue'
+import type { Skill } from '~/types'
+import { toRefs } from 'vue'
 
-const props = defineProps<Skill>()
+// Importar el composable de dark mode
+const { isDark } = useDarkMode()
 
-// Animation properties
-const cardRef = ref<HTMLElement | null>(null)
-const iconRef = ref<HTMLElement | null>(null)
-const progressRef = ref<HTMLElement | null>(null)
-const isHovered = ref(false)
-
-// GSAP timelines
-const hoverTimeline = ref<gsap.core.Timeline | null>(null)
-const progressTimeline = ref<gsap.core.Timeline | null>(null)
-
-// Motion states with enhanced animations
-const motionProps = {
-  initial: { 
-    opacity: 0,
-    scale: 0.95,
-    y: 20,
-    rotateX: -5,
-    rotateY: -2
-  },
-  enter: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    rotateX: 0,
-    rotateY: 0,
-    transition: {
-      duration: 0.8,
-      easing: [0.4, 0, 0.2, 1],
-      stagger: 0.1
-    }
-  }
-}
+const props = defineProps<Skill & { isCentered?: boolean }>()
+const { isCentered = false } = toRefs(props)
 
 // Get level percentage for progress bar
 const getLevelPercentage = (level: string) => {
@@ -174,229 +221,96 @@ const getLevelPercentage = (level: string) => {
   }
   return levels[level.toLowerCase() as keyof typeof levels] || 50
 }
-
-// Enhanced hover handlers
-const handleMouseEnter = () => {
-  isHovered.value = true
-  
-  if (hoverTimeline.value) {
-    hoverTimeline.value.play()
-  }
-
-  // Enhanced parallax effect on icon
-  if (iconRef.value) {
-    gsap.to(iconRef.value, {
-      y: -4,
-      rotate: 5,
-      scale: 1.1,
-      duration: 0.4,
-      ease: "power2.out",
-      transformOrigin: "center center"
-    })
-  }
-}
-
-const handleMouseLeave = () => {
-  isHovered.value = false
-  
-  if (hoverTimeline.value) {
-    hoverTimeline.value.reverse()
-  }
-
-  // Reset icon position
-  if (iconRef.value) {
-    gsap.to(iconRef.value, {
-      y: 0,
-      rotate: 0,
-      scale: 1,
-      duration: 0.4,
-      ease: "power2.out"
-    })
-  }
-}
-
-// GSAP animations
-onMounted(() => {
-  if (!cardRef.value || !iconRef.value || !progressRef.value) return
-
-  // Enhanced hover timeline with improved easing
-  hoverTimeline.value = gsap.timeline({ paused: true })
-    .to(cardRef.value, {
-      scale: 1.02,
-      y: -4,
-      rotateX: 2,
-      rotateY: 2,
-      duration: 0.4,
-      ease: "power2.out",
-      transformOrigin: "center center"
-    })
-    .to(iconRef.value, {
-      scale: 1.1,
-      rotate: 5,
-      duration: 0.4,
-      ease: "power2.out",
-      transformOrigin: "center center"
-    }, '-=0.2')
-
-  // Enhanced progress bar animation with improved easing
-  progressTimeline.value = gsap.timeline({ paused: true })
-    .fromTo(progressRef.value,
-      { width: 0 },
-      { 
-        width: `${getLevelPercentage(props.level)}%`,
-        duration: 1.2,
-        ease: "power2.inOut",
-        transformOrigin: "left center"
-      }
-    )
-
-  // Play progress animation with delay
-  setTimeout(() => {
-    if (progressTimeline.value) {
-      progressTimeline.value.play()
-    }
-  }, 200)
-})
-
-// Cleanup
-onUnmounted(() => {
-  if (hoverTimeline.value) {
-    hoverTimeline.value.kill()
-  }
-  if (progressTimeline.value) {
-    progressTimeline.value.kill()
-  }
-})
-
-// Accessibility
-const prefersReducedMotion = computed(() => {
-  if (process.client) {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  }
-  return false
-})
 </script>
 
 <style scoped>
 .skill-card {
-  --card-scale: 1;
-  --card-rotate-x: 0;
-  --card-rotate-y: 0;
-  --card-y: 0;
-  --card-glow: 0 0 20px rgba(255, 255, 255, 0.1);
-  --card-depth: 0px;
-  transform: translate3d(0, 0, 0);
-  will-change: transform, opacity;
-  transform-style: preserve-3d;
+  min-height: 20rem;
+  max-height: 20rem;
+  min-width: 18rem;
+  max-width: 24rem;
+  width: 100%;
+  box-sizing: border-box;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  border-radius: 1rem;
 }
 
-.perspective-1000 {
-  perspective: 1000px;
+.skill-card * {
+  box-sizing: border-box;
 }
 
-.transform-gpu {
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform, opacity;
-  transform-style: preserve-3d;
+/* Logo/Icono contenedor */
+.skill-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  margin: 0 auto;
 }
 
-@keyframes float-enhanced {
-  0%, 100% {
-    transform: translateY(0) translateZ(0) rotate(0);
-  }
-  50% {
-    transform: translateY(-8px) translateZ(10px) rotate(1deg);
-  }
+.skill-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  aspect-ratio: 1/1;
+  border-radius: 0.75rem;
+  filter: drop-shadow(0 1px 2px rgba(16,185,129,0.10));
+  transition: all 0.3s;
 }
 
-.animate-float-enhanced {
-  animation: float-enhanced 6s ease-in-out infinite;
+.skill-logo-icon {
+  width: 3rem;
+  height: 3rem;
+  display: block;
+  margin: 0 auto;
+  aspect-ratio: 1/1;
+  transition: all 0.3s;
 }
 
-/* Enhanced glass effect with 3D transforms */
-.skill-card > div {
-  box-shadow: var(--card-glow);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transform: 
-    scale(var(--card-scale))
-    translateY(var(--card-y))
-    rotateX(var(--card-rotate-x))
-    rotateY(var(--card-rotate-y))
-    translateZ(var(--card-depth));
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
-
-/* Level-specific styles with enhanced depth */
-.skill-card--beginner > div {
-  --card-glow: 0 0 20px rgba(59, 130, 246, 0.1);
-  --card-depth: 5px;
-}
-
-.skill-card--intermediate > div {
-  --card-glow: 0 0 20px rgba(139, 92, 246, 0.1);
-  --card-depth: 10px;
-}
-
-.skill-card--advanced > div {
-  --card-glow: 0 0 20px rgba(236, 72, 153, 0.1);
-  --card-depth: 15px;
-}
-
-.skill-card--expert > div {
-  --card-glow: 0 0 20px rgba(16, 185, 129, 0.1);
-  --card-depth: 20px;
-}
-
-/* Enhanced hover states with depth */
-.skill-card--hover > div {
-  --card-glow: 0 0 30px rgba(255, 255, 255, 0.15);
-  --card-depth: calc(var(--card-depth) * 1.5);
-}
-
-/* Accessibility and performance optimizations */
-@media (prefers-reduced-motion: reduce) {
-  .animate-float-enhanced {
-    animation: none;
-  }
-  
-  .skill-card > div {
-    transition: none;
-    transform: none !important;
-  }
+/* Glassmorphism */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* Performance optimizations */
 .skill-card {
-  contain: content;
-  transform-style: preserve-3d;
-  will-change: transform, opacity;
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
 }
 
-/* Dark mode adjustments with enhanced depth */
-.dark .skill-card > div {
-  --card-glow: 0 0 20px rgba(255, 255, 255, 0.05);
-  --card-depth: calc(var(--card-depth) * 0.8);
+/* Efecto de elevación y escala al hover/focus */
+.group:hover,
+.group:focus-within {
+  transform: scale(1.03);
+  z-index: 2;
 }
 
-/* Accessibility */
-.reduce-motion {
-  animation: none !important;
-  transition: none !important;
+/* Transiciones suaves */
+.group {
+  transition: box-shadow 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
 }
 
-.reduce-motion * {
-  animation: none !important;
-  transition: none !important;
+/* Responsive y performance */
+@media (max-width: 768px) {
+  .backdrop-blur-md {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
-/* Optimized hover transitions with hardware acceleration */
-@media (hover: hover) {
-  .skill-card {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .skill-card,
+  .skill-card * {
+    transition: none !important;
+    animation: none !important;
   }
 }
 </style>
