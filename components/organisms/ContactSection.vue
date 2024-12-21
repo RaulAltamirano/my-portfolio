@@ -1,18 +1,14 @@
 <template>
   <section 
     id="contact"
-    class="relative py-24 px-6 sm:px-8 lg:px-12 overflow-hidden"
+    class="relative py-24 px-6 sm:px-8 lg:px-12 overflow-hidden border-t transition-colors duration-300"
     :class="[
-      'bg-gradient-to-b from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/50',
-      'border-t border-slate-200/50 dark:border-slate-800/50'
+      isDark ? 'border-slate-800/50' : 'border-slate-200/50'
     ]"
   >
-    <!-- Background Elements -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-500/5 to-cyan-500/5 dark:from-blue-500/10 dark:to-cyan-500/10 blur-3xl transform rotate-12"></div>
-      <div class="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-purple-500/5 to-blue-500/5 dark:from-purple-500/10 dark:to-blue-500/10 blur-3xl transform -rotate-12"></div>
-    </div>
-
+    <!-- Section Background -->
+    <SectionBackground section="contact" />
+    
     <div class="relative max-w-7xl mx-auto">
       <!-- Section Header -->
       <Motion
@@ -27,7 +23,12 @@
           :animate="{ scale: 1, opacity: 1 }"
           :transition="{ duration: 0.5, delay: 0.2, easing: spring({ stiffness: 100, damping: 15 }) }"
           tag="div"
-          class="inline-flex items-center px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full border border-slate-200/50 dark:border-slate-700/50 shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20 mb-6"
+          class="inline-flex items-center px-4 py-2 backdrop-blur-sm rounded-full border shadow-lg mb-6 transition-all duration-300"
+          :class="[
+            isDark 
+              ? 'bg-slate-800/80 border-slate-700/50 shadow-slate-900/20' 
+              : 'bg-white/80 border-slate-200/50 shadow-slate-200/20'
+          ]"
         >
           <span class="text-sm font-semibold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent uppercase tracking-wider">
             {{ category }}
@@ -39,7 +40,10 @@
           :animate="{ opacity: 1, y: 0 }"
           :transition="{ duration: 0.6, delay: 0.4, easing: spring({ stiffness: 100, damping: 15 }) }"
           tag="h2"
-          class="text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight"
+          class="text-5xl lg:text-6xl font-black mb-6 leading-tight transition-colors duration-300"
+          :class="[
+            isDark ? 'text-white' : 'text-slate-900'
+          ]"
         >
           {{ title }}
           <span class="block bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-clip-text text-transparent">
@@ -52,7 +56,10 @@
           :animate="{ opacity: 1, y: 0 }"
           :transition="{ duration: 0.6, delay: 0.6, easing: spring({ stiffness: 100, damping: 15 }) }"
           tag="p"
-          class="text-xl lg:text-2xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed mb-12"
+          class="text-xl lg:text-2xl max-w-3xl mx-auto font-normal leading-relaxed mb-12 transition-colors duration-300"
+          :class="[
+            isDark ? 'text-slate-400' : 'text-slate-600'
+          ]"
         >
           {{ description }}
         </Motion>
@@ -69,11 +76,24 @@
           class="relative group"
         >
           <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
-          <div class="relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/50 dark:border-slate-700/50">
+          <div 
+            class="relative backdrop-blur-sm rounded-2xl p-8 shadow-xl border transition-all duration-300"
+            :class="[
+              isDark 
+                ? 'bg-slate-800/80 border-slate-700/50' 
+                : 'bg-white/80 border-slate-200/50'
+            ]"
+          >
             <form @submit.prevent="handleSubmit" class="space-y-6">
               <div class="space-y-4">
                 <div class="relative">
-                  <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label 
+                    for="name" 
+                    class="block text-sm font-medium mb-1 transition-colors duration-300"
+                    :class="[
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    ]"
+                  >
                     Nombre
                   </label>
                   <div class="relative">
@@ -82,20 +102,34 @@
                       v-model="form.name"
                       type="text"
                       required
-                      class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      class="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       :class="[
-                        'placeholder-slate-400 dark:placeholder-slate-500',
-                        'hover:border-blue-200 dark:hover:border-blue-800',
-                        'focus:shadow-lg focus:shadow-blue-500/20 dark:focus:shadow-blue-500/10'
+                        isDark 
+                          ? 'bg-slate-900/50 border-slate-700 placeholder-slate-500 hover:border-blue-800 focus:shadow-blue-500/10' 
+                          : 'bg-white/50 border-slate-200 placeholder-slate-400 hover:border-blue-200 focus:shadow-blue-500/20',
+                        'focus:shadow-lg'
                       ]"
                       placeholder="Tu nombre"
                     />
-                    <div class="absolute inset-0 rounded-lg transition duration-200 pointer-events-none ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50 group-hover:ring-blue-200/50 dark:group-hover:ring-blue-800/50"></div>
+                    <div 
+                      class="absolute inset-0 rounded-lg transition duration-200 pointer-events-none ring-1 ring-inset"
+                      :class="[
+                        isDark 
+                          ? 'ring-slate-700/50 group-hover:ring-blue-800/50' 
+                          : 'ring-slate-200/50 group-hover:ring-blue-200/50'
+                      ]"
+                    ></div>
                   </div>
                 </div>
 
                 <div class="relative">
-                  <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label 
+                    for="email" 
+                    class="block text-sm font-medium mb-1 transition-colors duration-300"
+                    :class="[
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    ]"
+                  >
                     Email
                   </label>
                   <div class="relative">
@@ -104,20 +138,34 @@
                       v-model="form.email"
                       type="email"
                       required
-                      class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      class="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                       :class="[
-                        'placeholder-slate-400 dark:placeholder-slate-500',
-                        'hover:border-blue-200 dark:hover:border-blue-800',
-                        'focus:shadow-lg focus:shadow-blue-500/20 dark:focus:shadow-blue-500/10'
+                        isDark 
+                          ? 'bg-slate-900/50 border-slate-700 placeholder-slate-500 hover:border-blue-800 focus:shadow-blue-500/10' 
+                          : 'bg-white/50 border-slate-200 placeholder-slate-400 hover:border-blue-200 focus:shadow-blue-500/20',
+                        'focus:shadow-lg'
                       ]"
                       placeholder="tu@email.com"
                     />
-                    <div class="absolute inset-0 rounded-lg transition duration-200 pointer-events-none ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50 group-hover:ring-blue-200/50 dark:group-hover:ring-blue-800/50"></div>
+                    <div 
+                      class="absolute inset-0 rounded-lg transition duration-200 pointer-events-none ring-1 ring-inset"
+                      :class="[
+                        isDark 
+                          ? 'ring-slate-700/50 group-hover:ring-blue-800/50' 
+                          : 'ring-slate-200/50 group-hover:ring-blue-200/50'
+                      ]"
+                    ></div>
                   </div>
                 </div>
 
                 <div class="relative">
-                  <label for="message" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label 
+                    for="message" 
+                    class="block text-sm font-medium mb-1 transition-colors duration-300"
+                    :class="[
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    ]"
+                  >
                     Mensaje
                   </label>
                   <div class="relative">
@@ -126,15 +174,23 @@
                       v-model="form.message"
                       required
                       rows="4"
-                      class="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                      class="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
                       :class="[
-                        'placeholder-slate-400 dark:placeholder-slate-500',
-                        'hover:border-blue-200 dark:hover:border-blue-800',
-                        'focus:shadow-lg focus:shadow-blue-500/20 dark:focus:shadow-blue-500/10'
+                        isDark 
+                          ? 'bg-slate-900/50 border-slate-700 placeholder-slate-500 hover:border-blue-800 focus:shadow-blue-500/10' 
+                          : 'bg-white/50 border-slate-200 placeholder-slate-400 hover:border-blue-200 focus:shadow-blue-500/20',
+                        'focus:shadow-lg'
                       ]"
                       placeholder="Tu mensaje..."
                     ></textarea>
-                    <div class="absolute inset-0 rounded-lg transition duration-200 pointer-events-none ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50 group-hover:ring-blue-200/50 dark:group-hover:ring-blue-800/50"></div>
+                    <div 
+                      class="absolute inset-0 rounded-lg transition duration-200 pointer-events-none ring-1 ring-inset"
+                      :class="[
+                        isDark 
+                          ? 'ring-slate-700/50 group-hover:ring-blue-800/50' 
+                          : 'ring-slate-200/50 group-hover:ring-blue-200/50'
+                      ]"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -145,7 +201,8 @@
                 :disabled="isSubmitting"
                 :class="[
                   'hover:from-blue-700 hover:to-cyan-700',
-                  'focus:shadow-lg focus:shadow-blue-500/20 dark:focus:shadow-blue-500/10',
+                  'focus:shadow-lg',
+                  isDark ? 'focus:shadow-blue-500/10' : 'focus:shadow-blue-500/20',
                   'before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-blue-400 before:to-cyan-400 before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-20'
                 ]"
               >
@@ -185,23 +242,53 @@
               :class="card.class"
             >
               <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition duration-1000"></div>
-              <div class="relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10">
+              <div 
+                class="relative backdrop-blur-sm p-6 rounded-xl border shadow-lg transition-all duration-300 hover:shadow-xl"
+                :class="[
+                  isDark 
+                    ? 'bg-slate-800/80 border-slate-700/50 hover:shadow-blue-500/10' 
+                    : 'bg-white/80 border-slate-200/50 hover:shadow-blue-500/5'
+                ]"
+              >
                 <div class="flex items-center space-x-4">
-                  <div class="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-lg transition-transform duration-300 group-hover:scale-110">
+                  <div 
+                    class="p-3 rounded-lg transition-transform duration-300 group-hover:scale-110"
+                    :class="[
+                      isDark 
+                        ? 'bg-gradient-to-br from-blue-900/30 to-cyan-900/30' 
+                        : 'bg-gradient-to-br from-blue-50 to-cyan-50'
+                    ]"
+                  >
                     <component 
                       :is="card.icon" 
-                      class="w-6 h-6 text-blue-600 dark:text-blue-400 transition-colors duration-300 group-hover:text-blue-700 dark:group-hover:text-blue-300" 
+                      class="w-6 h-6 transition-colors duration-300"
+                      :class="[
+                        isDark 
+                          ? 'text-blue-400 group-hover:text-blue-300' 
+                          : 'text-blue-600 group-hover:text-blue-700'
+                      ]"
                     />
                   </div>
                   <div>
-                    <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ card.title }}</h3>
+                    <h3 
+                      class="text-sm font-medium transition-colors duration-300"
+                      :class="[
+                        isDark ? 'text-slate-400' : 'text-slate-500'
+                      ]"
+                    >
+                      {{ card.title }}
+                    </h3>
                     <component 
                       :is="card.content" 
                       :href="card.href"
                       :class="[
-                        'text-base font-semibold text-slate-900 dark:text-white',
-                        'transition-colors duration-300',
-                        card.href ? 'hover:text-blue-600 dark:hover:text-blue-400' : ''
+                        'text-base font-semibold transition-colors duration-300',
+                        isDark ? 'text-white' : 'text-slate-900',
+                        card.href 
+                          ? isDark 
+                            ? 'hover:text-blue-400' 
+                            : 'hover:text-blue-600' 
+                          : ''
                       ]"
                     />
                   </div>
@@ -219,8 +306,22 @@
             class="group relative"
           >
             <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition duration-1000"></div>
-            <div class="relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10">
-              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Conecta conmigo</h3>
+            <div 
+              class="relative backdrop-blur-sm p-6 rounded-xl border shadow-lg transition-all duration-300 hover:shadow-xl"
+              :class="[
+                isDark 
+                  ? 'bg-slate-800/80 border-slate-700/50 hover:shadow-blue-500/10' 
+                  : 'bg-white/80 border-slate-200/50 hover:shadow-blue-500/5'
+              ]"
+            >
+              <h3 
+                class="text-lg font-semibold mb-4 transition-colors duration-300"
+                :class="[
+                  isDark ? 'text-white' : 'text-slate-900'
+                ]"
+              >
+                Conecta conmigo
+              </h3>
               <div class="flex flex-wrap gap-4">
                 <Motion
                   v-for="(social, index) in socialLinks"
@@ -236,7 +337,14 @@
                   :aria-label="social.name"
                 >
                   <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg blur opacity-0 group-hover/social:opacity-20 transition duration-300"></div>
-                  <div class="relative p-3 bg-white/50 dark:bg-slate-900/50 rounded-lg text-slate-600 dark:text-slate-400 transition-all duration-300 transform hover:scale-110 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/30">
+                  <div 
+                    class="relative p-3 rounded-lg transition-all duration-300 transform hover:scale-110"
+                    :class="[
+                      isDark 
+                        ? 'bg-slate-900/50 text-slate-400 hover:text-blue-400 hover:bg-blue-900/30' 
+                        : 'bg-white/50 text-slate-600 hover:text-blue-600 hover:bg-blue-50/50'
+                    ]"
+                  >
                     <component :is="social.icon" class="w-6 h-6" />
                   </div>
                 </Motion>
@@ -254,6 +362,10 @@ import { ref, computed } from 'vue'
 import { Motion } from '@motionone/vue'
 import { spring } from '@motionone/dom'
 import { EnvelopeIcon, MapPinIcon } from '@heroicons/vue/24/outline'
+import SectionBackground from '~/components/molecules/SectionBackground.vue'
+
+// Importar el composable de dark mode
+const { isDark } = useDarkMode()
 
 // Props
 const props = defineProps<{
@@ -335,5 +447,18 @@ const handleSubmit = async () => {
   .animate-spin {
     animation: none !important;
   }
+}
+
+/* Performance optimizations */
+section {
+  will-change: background-color, border-color;
+  backface-visibility: hidden;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 </style>
