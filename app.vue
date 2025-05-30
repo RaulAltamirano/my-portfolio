@@ -36,18 +36,9 @@
         <Footer />
       </div>
     </footer>
-
-    <!-- Scroll to top with animation -->
+    
     <ScrollToTop />
     
-    <!-- Custom cursor for desktop -->
-    <div 
-      ref="cursor" 
-      class="fixed w-6 h-6 pointer-events-none z-50 mix-blend-difference opacity-0 transition-all duration-300 lg:opacity-100"
-      :class="{ 'scale-150': isCursorActive }"
-    >
-      <div class="w-full h-full bg-white rounded-full scale-0 transition-transform duration-200"></div>
-    </div>
   </div>
 </template>
 
@@ -73,10 +64,6 @@ useHead({
   ]
 })
 
-// Custom cursor for desktop
-const cursor = ref<HTMLElement>()
-const isCursorActive = ref(false)
-
 // Page transitions
 const beforeLeave = (el: Element) => {
   // Add your pre-leave animation logic
@@ -90,60 +77,6 @@ const enter = (el: Element, done: () => void) => {
 const afterEnter = (el: Element) => {
   // Add your post-enter animation logic
 }
-
-onMounted(() => {
-  if (process.client && window.innerWidth >= 1024) {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (cursor.value) {
-        cursor.value.style.left = e.clientX - 12 + 'px'
-        cursor.value.style.top = e.clientY - 12 + 'px'
-      }
-    }
-
-    const handleMouseEnter = () => {
-      if (cursor.value) {
-        isCursorActive.value = true
-        cursor.value.querySelector('div')?.classList.add('scale-100')
-      }
-    }
-
-    const handleMouseLeave = () => {
-      if (cursor.value) {
-        isCursorActive.value = false
-        cursor.value.querySelector('div')?.classList.remove('scale-100')
-      }
-    }
-
-    // Enhanced cursor interactions
-    const handleClick = () => {
-      if (cursor.value) {
-        cursor.value.classList.add('scale-75')
-        setTimeout(() => {
-          cursor.value?.classList.remove('scale-75')
-        }, 150)
-      }
-    }
-
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('click', handleClick)
-    
-    // Add cursor effects to interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"], input, textarea, select, [tabindex]:not([tabindex="-1"])')
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter)
-      el.addEventListener('mouseleave', handleMouseLeave)
-    })
-
-    onUnmounted(() => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('click', handleClick)
-      interactiveElements.forEach(el => {
-        el.removeEventListener('mouseenter', handleMouseEnter)
-        el.removeEventListener('mouseleave', handleMouseLeave)
-      })
-    })
-  }
-})
 </script>
 
 <style>
@@ -169,7 +102,7 @@ onMounted(() => {
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background:rgb(0, 0, 0)
 }
 
 ::-webkit-scrollbar-thumb {
