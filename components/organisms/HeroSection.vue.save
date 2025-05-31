@@ -1,0 +1,629 @@
+
+<template>
+  <section 
+    id="home"
+    class="relative min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-8 items-center overflow-hidden bg-gradient-to-b from-slate-50 via-slate-50/95 to-slate-100 dark:from-slate-900 dark:via-slate-900/95 dark:to-slate-800 pt-20 md:pt-24"
+    data-scroll-section="hero"
+    role="region"
+    aria-label="Hero section with introduction and brand showcase"
+  >
+
+    <!-- Left Content Column -->
+    <div class="relative z-20 col-span-1 lg:col-span-6 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="space-y-8 lg:space-y-12">
+        <!-- Role Badge -->
+        <Motion
+          :initial="heroVariants.roleBadge.initial"
+          :enter="heroVariants.roleBadge.enter"
+          tag="div"
+          class="inline-flex items-center px-4 py-2 bg-white/90 dark:bg-slate-800/90 rounded-full border border-slate-200/50 dark:border-slate-700/50 shadow-sm backdrop-blur-sm hover:shadow-md hover:scale-[1.02] transition-all duration-300 group"
+        >
+          <span class="text-sm font-medium bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent tracking-wide">
+            <!-- {{ role }} -->
+          </span>
+          <div class="absolute inset-0 rounded-full bg-gradient-to-r from-violet-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </Motion>
+
+        <!-- Name -->
+        <Motion
+          :initial="heroVariants.name.initial"
+          :enter="heroVariants.name.enter"
+          tag="div"
+          class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight"
+        >
+          <span class="relative inline-block">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 dark:from-violet-400 dark:via-purple-400 dark:to-blue-400">
+              {{ name }}
+            </span>
+            <div class="absolute inset-0 bg-gradient-to-r from-violet-600/20 via-purple-600/20 to-blue-600/20 blur-xl -z-10"></div>
+          </span>
+        </Motion>
+
+        <!-- Description -->
+        <Motion
+          :initial="heroVariants.description.initial"
+          :enter="heroVariants.description.enter"
+          tag="div"
+          class="max-w-2xl mx-auto text-lg sm:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-medium"
+        >
+          {{ description }}
+        </Motion>
+
+        <!-- CTA Buttons -->
+        <Motion
+          :initial="heroVariants.cta.initial"
+          :enter="heroVariants.cta.enter"
+          tag="div"
+          class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+        >
+          <a
+            href="#projects"
+            class="group relative inline-flex items-center justify-center px-6 py-3 rounded-xl bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700/90 text-slate-900 dark:text-white font-medium shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200/50 dark:border-slate-700/50 overflow-hidden"
+          >
+            <span class="relative z-10">View Projects</span>
+            <svg
+              class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/20 dark:via-slate-700/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+          </a>
+
+          <a
+            href="#contact"
+            class="group relative inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/30 transition-all duration-500 overflow-hidden transform-gpu hover:-translate-y-0.5"
+          >
+            <span class="relative z-10">Contact Me</span>
+            <svg
+              class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300 relative z-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+          </a>
+        </Motion>
+      </div>
+    </div>
+
+    <!-- Right Content Column - Website Stack Animation -->
+    <div class="relative col-span-1 lg:col-span-6">
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-full h-full relative">
+          <Motion
+            :initial="heroVariants.stack.initial"
+            :enter="heroVariants.stack.enter"
+            tag="div"
+            class="absolute inset-0"
+          >
+            <div class="relative w-full h-full">
+              <div class="absolute inset-0 bg-white/5 dark:bg-slate-900/5 rounded-lg shadow-lg"></div>
+              <div class="absolute inset-0 bg-white/10 dark:bg-slate-900/10 rounded-lg shadow-lg -rotate-2"></div>
+              <div class="absolute inset-0 bg-white/15 dark:bg-slate-900/15 rounded-lg shadow-lg rotate-2"></div>
+              <div class="absolute inset-0 bg-white/20 dark:bg-slate-900/20 rounded-lg shadow-lg"></div>
+              <div class="absolute inset-0 bg-white/25 dark:bg-slate-900/25 rounded-lg shadow-lg -rotate-1"></div>
+              <div class="absolute inset-0 bg-white/30 dark:bg-slate-900/30 rounded-lg shadow-lg rotate-1"></div>
+              <div class="absolute inset-0 bg-white/35 dark:bg-slate-900/35 rounded-lg shadow-lg"></div>
+              <div class="absolute inset-0 bg-white/40 dark:bg-slate-900/40 rounded-lg shadow-lg -rotate-2"></div>
+              <div class="absolute inset-0 bg-white/45 dark:bg-slate-900/45 rounded-lg shadow-lg rotate-2"></div>
+              <div class="absolute inset-0 bg-white/50 dark:bg-slate-900/50 rounded-lg shadow-lg"></div>
+            </div>
+          </Motion>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand Showcase Section -->
+    <div class="relative col-span-1 lg:col-span-12 mt-16 lg:mt-24">
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Motion
+          v-for="(brand, index) in brands"
+          :key="brand.id"
+          :variants="heroVariants.brand"
+          :transition="{ delay: index * 0.1 }"
+          tag="div"
+          class="relative group"
+        >
+          <div class="relative w-full h-24 sm:h-32 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+            <img
+              :src="brand.image"
+              :alt="brand.name"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <h3 class="font-medium">{{ brand.name }}</h3>
+              <p class="text-sm text-gray-300">{{ brand.description }}</p>
+            </div>
+          </div>
+        </Motion>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+import { Motion } from '@motionone/vue'
+import { spring } from '@motionone/dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+// Register GSAP plugins
+if (process.client) {
+  gsap.registerPlugin(ScrollTrigger)
+}
+
+interface TypewriterText {
+  text: string
+  speed: number
+}
+
+const props = defineProps<{
+  role: string
+  name: string
+  description: string
+}>()
+
+// Animation variants type
+interface HeroVariants {
+  [key: string]: {
+    initial: {
+      opacity: number
+      y: number
+      scale: number
+      filter?: string
+    }
+    enter: {
+      opacity: number
+      y: number
+      scale: number
+      filter?: string
+      transition: {
+        duration: number
+        delay?: number
+        easing?: number[]
+        [key: string]: any
+      }
+    }
+  }
+}
+
+// Animation variants
+const heroVariants = ref<HeroVariants>({
+  roleBadge: {
+    initial: {
+      opacity: 0,
+      y: 20,
+      scale: 0.98,
+      filter: 'blur(4px)'
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: 'blur(0px)',
+      transition: {
+        duration: 0.8,
+        easing: [0.22, 1, 0.36, 1],
+        scale: { duration: 0.6 },
+        filter: { duration: 0.5 }
+      }
+    }
+  },
+  name: {
+    initial: {
+      opacity: 0,
+      y: 40,
+      filter: 'blur(12px)',
+      scale: 0.98
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      scale: 1,
+      transition: {
+        duration: 1.2,
+        delay: 0.3,
+        easing: [0.22, 1, 0.36, 1],
+        filter: { duration: 0.9 },
+        scale: { duration: 0.7 }
+      }
+    }
+  },
+  description: {
+    initial: {
+      opacity: 0,
+      y: 30,
+      filter: 'blur(8px)',
+      scale: 0.98
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      scale: 1,
+      transition: {
+        duration: 0.9,
+        delay: 0.3,
+        easing: [0.22, 1, 0.36, 1],
+        filter: { duration: 0.7 },
+        scale: { duration: 0.6 }
+      }
+    }
+  },
+  cta: {
+    initial: {
+      opacity: 0,
+      y: 30,
+      filter: 'blur(8px)',
+      scale: 0.98
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      filter: 'blur(0px)',
+      scale: 1,
+      transition: {
+        duration: 0.9,
+        delay: 0.4,
+        easing: [0.22, 1, 0.36, 1],
+        filter: { duration: 0.7 },
+        scale: { duration: 0.6 }
+      }
+    }
+  },
+  stack: {
+    initial: {
+      opacity: 0,
+      y: 100,
+      scale: 0.95
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 1.2,
+        delay: 0.5,
+        easing: [0.22, 1, 0.36, 1]
+      }
+    }
+  },
+  brand: {
+    initial: {
+      opacity: 0,
+      y: 20,
+      scale: 0.95
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        easing: [0.22, 1, 0.36, 1]
+      }
+    }
+  }
+})
+
+// Brand showcase data
+interface Brand {
+  id: number
+  name: string
+  description: string
+  image: string
+}
+
+const brands = ref<Brand[]>([
+  {
+    id: 1,
+    name: 'Next.js',
+    image: '/images/brands/nextjs.png',
+    description: 'Modern React framework'
+  },
+  {
+    id: 2,
+    name: 'React',
+    image: '/images/brands/react.png',
+    description: 'JavaScript library for building user interfaces'
+  },
+  {
+    id: 3,
+    name: 'Vue',
+    image: '/images/brands/vue.png',
+    description: 'Progressive JavaScript framework'
+  },
+  {
+    id: 4,
+    name: 'Tailwind',
+    image: '/images/brands/tailwind.png',
+    description: 'Utility-first CSS framework'
+  },
+  {
+    id: 5,
+    name: 'Node.js',
+    image: '/images/brands/nodejs.png',
+    description: 'JavaScript runtime'
+  },
+  {
+    id: 6,
+    name: 'TypeScript',
+    image: '/images/brands/typescript.png',
+    description: 'JavaScript with syntax for types'
+  }
+])
+
+// Enhanced parallax effect with better performance and smoothness
+const parallaxContainer = ref<HTMLElement | null>(null)
+const parallaxLayers = ref<HTMLElement[]>([])
+const parallaxTimeout = ref<number | null>(null)
+
+const handleParallax = (e: MouseEvent) => {
+  if (!parallaxContainer.value) return
+
+  const { clientX, clientY } = e
+  const rect = parallaxContainer.value.getBoundingClientRect()
+  const x = (clientX - rect.left) / rect.width - 0.5
+  const y = (clientY - rect.top) / rect.height - 0.5
+
+  // Debounce the parallax update for better performance
+  if (parallaxTimeout.value) {
+    clearTimeout(parallaxTimeout.value)
+  }
+  
+  parallaxTimeout.value = setTimeout(() => {
+    parallaxLayers.value.forEach((layer, index) => {
+      const depth = (index + 1) / parallaxLayers.value.length
+      const translateX = x * 20 * depth
+      const translateY = y * 20 * depth
+      
+      layer.style.transform = `translate(${translateX}px, ${translateY}px)`
+    })
+  }, 16) // ~60fps
+}
+
+// Enhanced scroll indicator animation with GSAP
+const scrollIndicator = ref<HTMLElement | null>(null)
+
+// Add initial CSS animations with GSAP timeline
+const initialAnimation = ref(false)
+let masterTimeline: gsap.core.Timeline
+
+// Initialize animations with GSAP for better control
+onMounted(() => {
+  if (process.client) {
+    // Create master timeline for initial animations
+    masterTimeline = gsap.timeline({
+      paused: true,
+      defaults: { ease: 'power2.out' }
+    })
+
+    // Staggered entrance animation
+    masterTimeline
+      .from('.role-badge', {
+        opacity: 0,
+        y: 20,
+        scale: 0.95,
+        duration: 0.8,
+        filter: 'blur(4px)'
+      })
+      .from('.name-text', {
+        opacity: 0,
+        y: 40,
+        scale: 0.98,
+        duration: 1,
+        filter: 'blur(8px)'
+      }, '-=0.4')
+      .from('.typewriter-container', {
+        opacity: 0,
+        y: 30,
+        duration: 0.8
+      }, '-=0.6')
+      .from('.description-text', {
+        opacity: 0,
+        y: 25,
+        duration: 0.8
+      }, '-=0.4')
+      .from('.cta-buttons a', {
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        stagger: 0.1
+      }, '-=0.4')
+      .from('.scroll-indicator', {
+        opacity: 0,
+        y: 15,
+        duration: 0.6
+      }, '-=0.2')
+
+    // Start animation after a small delay
+    setTimeout(() => {
+      initialAnimation.value = true
+      masterTimeline.play()
+    }, 100)
+
+    // Scroll-based animations
+    gsap.from('.hero-content', {
+      scrollTrigger: {
+        trigger: '#home',
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 1
+      },
+      y: 50,
+      opacity: 0.8,
+      scale: 0.98,
+      filter: 'blur(2px)'
+    })
+
+    // Add hover animations for buttons
+    const buttons = document.querySelectorAll('.cta-buttons a')
+    buttons.forEach(button => {
+      button.addEventListener('mouseenter', () => {
+        gsap.to(button, {
+          scale: 1.02,
+          duration: 0.3,
+          ease: 'power2.out'
+        })
+      })
+      button.addEventListener('mouseleave', () => {
+        gsap.to(button, {
+          scale: 1,
+          duration: 0.3,
+          ease: 'power2.out'
+        })
+      })
+    })
+
+    // Verificar que Motion está disponible
+    const instance = getCurrentInstance()
+    if (instance?.appContext.app.component('Motion')) {
+      console.log('Motion component is available')
+    } else {
+      console.warn('Motion component is not available')
+    }
+  }
+  
+  window.addEventListener('mousemove', handleParallax)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('mousemove', handleParallax)
+  if (masterTimeline) {
+    masterTimeline.kill()
+  }
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+})
+</script>
+
+<style scoped>
+@keyframes wave-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+  50% {
+    transform: translate3d(0, 8px, 0) scale3d(1.01, 1.01, 1);
+  }
+}
+
+@keyframes wave-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0) scale3d(0.99, 0.99, 1);
+  }
+}
+
+@keyframes scroll {
+  0%, 100% {
+    transform: translate3d(-50%, 0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(-50%, 10px, 0);
+    opacity: 0.6;
+  }
+}
+
+.animate-wave-1 {
+  animation: wave-1 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animate-wave-2 {
+  animation: wave-2 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animate-scroll {
+  animation: scroll 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Enhanced hover states with better performance */
+.cta-buttons a {
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta-buttons a:hover {
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.3);
+}
+
+/* Enhanced accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate-wave-1,
+  .animate-wave-2,
+  .animate-scroll,
+  .cta-buttons a,
+  .wave-container {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  
+  .transition-all,
+  .transition-transform,
+  .transition-opacity {
+    transition: none !important;
+  }
+}
+
+/* Performance optimizations */
+.transform-gpu {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* Enhanced dark mode transitions */
+.dark .bg-gradient-to-r {
+  --tw-gradient-from: rgb(124 58 237 / 0.95);
+  --tw-gradient-to: rgb(147 51 234 / 0.95);
+  transition: --tw-gradient-from 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              --tw-gradient-to 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Enhanced mobile optimizations */
+@media (max-width: 640px) {
+  .text-5xl {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  
+  .text-xl {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+  
+  .wave-container {
+    transform: none !important;
+  }
+  
+  .cta-buttons a {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+</style>
+

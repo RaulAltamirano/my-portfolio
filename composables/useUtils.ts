@@ -4,9 +4,20 @@ export const useUtils = () => {
   }
 
   const scrollToElement = (elementId: string) => {
+    if (!process.client) return
+    
     const element = document.getElementById(elementId)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      try {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        })
+      } catch (error) {
+        console.error('Error scrolling to element:', error)
+        // Fallback to instant scroll if smooth scroll fails
+        element.scrollIntoView()
+      }
     }
   }
 

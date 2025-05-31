@@ -1,5 +1,6 @@
 <template>
-  <div >
+  <div class="relative">
+
     <HeroSection 
       :role="role"
       :name="name"
@@ -39,22 +40,10 @@
       :subtitle="contactSubtitle"
       :category="contactCategory"
       :description="contactDescription"
+      :email="contactEmail"
+      :location="contactLocation"
+      :socialLinks="contactSocialLinks"
     />
-    <ScrollAnimation
-    direction="up"
-    :distance="60"
-    :duration="1.2"
-    :delay="0.2"
-    threshold="top 70%"
-    :once="true"
-    @animation-start="handleAnimationStart"
-    @animation-complete="handleAnimationComplete"
-  >
-    <div class="mi-contenido">
-      <h2>Título animado</h2>
-      <p>Contenido que aparece con animación</p>
-    </div>
-  </ScrollAnimation>
   </div>
 </template>
 
@@ -64,7 +53,7 @@ import SkillsSection from '~/components/organisms/SkillsSection.vue'
 import ProjectsSection from '~/components/organisms/ProjectsSection.vue'
 import ExperienceSection from '~/components/organisms/ExperienceSection.vue'
 import ContactSection from '~/components/organisms/ContactSection.vue'
-import ScrollAnimation from '~/components/atoms/ScrollAnimation.vue'
+import BackgroundEffect from '~/components/molecules/BackgroundEffect.vue'
 import type { Project, Experience, Skill, TypewriterText } from '~/types'
 import { useMounted } from '~/composables/useMounted'
 
@@ -75,6 +64,7 @@ const {
   role, 
   name, 
   description, 
+  typewriterTexts,
   skillsTitle, 
   skillsSubtitle, 
   skillsCategory, 
@@ -162,23 +152,23 @@ const skills = ref<Skill[]>([
     name: 'TypeScript',
     category: 'Backend',
     level: 'advanced',
-    icon: 'academic-cap',
+    icon: 'code',
     technologies: []
   },
   {
     id: '3',
     name: 'Python',
     category: 'Backend',
-    level: 'expert',
-    icon: 'code-bracket',
+    level: 'advanced',
+    icon: 'code',
     technologies: []
   },
   {
     id: '4',
     name: 'Tailwind CSS',
     category: 'Frontend',
-    level: 'expert',
-    icon: 'paint-brush',
+    level: 'advanced',
+    icon: 'pencil-square',
     technologies: []
   },
   {
@@ -186,7 +176,7 @@ const skills = ref<Skill[]>([
     name: 'NestJS',
     category: 'Backend',
     level: 'advanced',
-    icon: 'server',
+    icon: 'code',
     technologies: []
   },
   {
@@ -194,7 +184,7 @@ const skills = ref<Skill[]>([
     name: 'React',
     category: 'Frontend',
     level: 'advanced',
-    icon: 'cube',
+    icon: 'puzzle',
     technologies: []
   },
   {
@@ -202,7 +192,7 @@ const skills = ref<Skill[]>([
     name: 'Svelte',
     category: 'Frontend',
     level: 'intermediate',
-    icon: 'bolt',
+    icon: 'sparkles',
     technologies: []
   },
   {
@@ -210,7 +200,7 @@ const skills = ref<Skill[]>([
     name: 'Django',
     category: 'Backend',
     level: 'advanced',
-    icon: 'server-stack',
+    icon: 'code',
     technologies: []
   },
   {
@@ -218,7 +208,7 @@ const skills = ref<Skill[]>([
     name: 'Docker',
     category: 'DevOps',
     level: 'intermediate',
-    icon: 'cube-transparent',
+    icon: 'puzzle',
     technologies: []
   },
   {
@@ -226,7 +216,7 @@ const skills = ref<Skill[]>([
     name: 'Node.js',
     category: 'Backend',
     level: 'advanced',
-    icon: 'server',
+    icon: 'code',
     technologies: []
   },
   {
@@ -241,16 +231,10 @@ const skills = ref<Skill[]>([
     id: '12',
     name: 'Git',
     category: 'DevOps',
-    level: 'expert',
-    icon: 'code-branch',
+    level: 'advanced',
+    icon: 'code',
     technologies: []
   }
-])
-
-const typewriterTexts = ref<TypewriterText[]>([
-  { text: 'Desarrollador Frontend', delay: 100, duration: 200 },
-  { text: 'Ingeniero de Software', delay: 100, duration: 200 },
-  { text: 'Arquitecto de Sistemas', delay: 100, duration: 200 }
 ])
 
 // Action buttons
@@ -268,6 +252,26 @@ const handleAnimationStart = () => {
 const handleAnimationComplete = () => {
   console.log('Animación completada')
 }
+
+const contactEmail = ref('contact@example.com')
+const contactLocation = ref('Madrid, España')
+const contactSocialLinks = ref([
+  {
+    name: 'GitHub',
+    url: 'https://github.com/yourusername',
+    icon: 'github'
+  },
+  {
+    name: 'LinkedIn',
+    url: 'https://linkedin.com/in/yourusername',
+    icon: 'linkedin'
+  },
+  {
+    name: 'Twitter',
+    url: 'https://twitter.com/yourusername',
+    icon: 'twitter'
+  }
+])
 
 </script>
 
