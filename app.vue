@@ -1,22 +1,16 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900 transition-all duration-500">
+  <div >
     <ClientOnly>
       <NuxtLoadingIndicator 
         color="#3b82f6" 
         :height="3"
-        class="!fixed !top-0 !left-0 !right-0 !z-50" 
+        
       />
     </ClientOnly>
     
-    <!-- Header with modern navigation -->
-    <header class="fixed top-0 w-full z-40 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/50 dark:border-slate-700/50 transition-all duration-300">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <NavMenu />
-      </div>
-    </header>
-
-    <!-- Main content with smooth page transitions -->
-    <main class="pt-20">
+    <LayoutHeader />
+    
+    <main >
       <NuxtPage v-slot="{ Component }">
         <Transition
           name="page"
@@ -30,20 +24,16 @@
       </NuxtPage>
     </main>
 
-    <!-- Footer with container -->
-    <footer class="mt-20 border-t border-slate-200/50 dark:border-slate-700/50">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Footer />
-      </div>
-    </footer>
+    <LayoutFooter />
     
     <ScrollToTop />
-    
   </div>
 </template>
 
 <script setup lang="ts">
-import { useHead } from '#app'
+
+import LayoutHeader from '~/components/layout/NavMenu.vue'
+import LayoutFooter from '~/components/layout/Footer.vue'
 
 // SEO optimization
 useHead({
@@ -79,7 +69,7 @@ const afterEnter = (el: Element) => {
 }
 </script>
 
-<style>
+<style scoped>
 /* Global styles and transitions */
 .page-enter-active,
 .page-leave-active {
@@ -99,30 +89,20 @@ const afterEnter = (el: Element) => {
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background:rgb(0, 0, 0)
+  background: rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
+  background: rgba(59, 130, 246, 0.5);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
-}
-
-/* Selection style */
-::selection {
-  background: #3b82f6;
-  color: white;
-}
-
-/* Focus styles */
-:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+  background: rgba(59, 130, 246, 0.7);
 }
 </style>
+
