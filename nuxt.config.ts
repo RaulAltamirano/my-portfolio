@@ -4,13 +4,30 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
-  vite: {    plugins: [      tailwindcss(),    ],  },
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+    optimizeDeps: {
+      include: [
+        '@motionone/vue'
+      ]
+    }
+  },
   css: [
-  '~/assets/css/tailwind.css'
-],
+  '~/assets/css/tailwind.css',
+    '~/assets/css/animations.css'
+  ],
+  
+  modules: [
+    '@nuxtjs/color-mode' // Módulo para el modo oscuro
+  ],
+
   // Plugins
   plugins: [
-    '~/plugins/scroll-reveal.client.ts'
+    '~/plugins/scroll-reveal.client.ts',
+    '~/plugins/animations.ts'
+    // '~/plugins/motion.ts' // Descomenta si es necesario después de probar
   ],
 
   // Componentes globales
@@ -32,12 +49,6 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ]
     }
-  },
-
-  // Configuración de dark mode
-  darkMode: {
-    classSuffix: '',
-    preference: 'system',
-    fallback: 'light'
   }
+  // La sección 'darkMode' incorrecta ha sido eliminada.
 })
