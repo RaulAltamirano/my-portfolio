@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <HeroSection 
       :role="role"
       :name="name"
@@ -7,22 +7,10 @@
       :actionButtons="actionButtons"
       :typewriterTexts="typewriterTexts"
       :scrollText="scrollText"
+      class="section-hero"
     />
     <SkillsSection
-      v-motion
-      :initial="{ opacity: 0, y: 100, scale: 0.95 }"
-      :visibleOnce="{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        transition: {
-          type: 'spring',
-          damping: 20,
-          stiffness: 100,
-          delay: 100,
-          duration: 800
-        }
-      }" 
+      class="section-skills"
       :title="skillsTitle"
       :subtitle="skillsSubtitle"
       :category="skillsCategory"
@@ -30,20 +18,7 @@
       :skills="skills"
     />
     <ProjectsSection
-      v-motion
-      :initial="{ opacity: 0, x: -100, rotate: -5 }"
-      :visibleOnce="{
-        opacity: 1,
-        x: 0,
-        rotate: 0,
-        transition: {
-          type: 'spring',
-          damping: 15,
-          stiffness: 100,
-          delay: 200,
-          duration: 1000
-        }
-      }" 
+      class="section-projects"
       :title="projectsTitle"
       :subtitle="projectsSubtitle"
       :category="projectsCategory"
@@ -51,20 +26,7 @@
       :projects="projects"
     />
     <ExperienceSection
-      v-motion
-      :initial="{ opacity: 0, y: 100, scale: 0.9 }"
-      :visibleOnce="{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        transition: {
-          type: 'spring',
-          damping: 25,
-          stiffness: 100,
-          delay: 300,
-          duration: 1200
-        }
-      }" 
+      class="section-experience"
       :title="experienceTitle"
       :subtitle="experienceSubtitle"
       :category="experienceCategory"
@@ -72,25 +34,27 @@
       :experiences="experiences"
     />
     <ContactSection
-      v-motion
-      :initial="{ opacity: 0, y: 50, blur: 10 }"
-      :visibleOnce="{
-        opacity: 1,
-        y: 0,
-        blur: 0,
-        transition: {
-          type: 'spring',
-          damping: 20,
-          stiffness: 100,
-          delay: 400,
-          duration: 1000
-        }
-      }"
+      class="section-contact"
       :title="contactTitle"
       :subtitle="contactSubtitle"
       :category="contactCategory"
       :description="contactDescription"
     />
+    <ScrollAnimation
+    direction="up"
+    :distance="60"
+    :duration="1.2"
+    :delay="0.2"
+    threshold="top 70%"
+    :once="true"
+    @animation-start="handleAnimationStart"
+    @animation-complete="handleAnimationComplete"
+  >
+    <div class="mi-contenido">
+      <h2>Título animado</h2>
+      <p>Contenido que aparece con animación</p>
+    </div>
+  </ScrollAnimation>
   </div>
 </template>
 
@@ -100,6 +64,7 @@ import SkillsSection from '~/components/organisms/SkillsSection.vue'
 import ProjectsSection from '~/components/organisms/ProjectsSection.vue'
 import ExperienceSection from '~/components/organisms/ExperienceSection.vue'
 import ContactSection from '~/components/organisms/ContactSection.vue'
+import ScrollAnimation from '~/components/atoms/ScrollAnimation.vue'
 import type { Project, Experience, Skill, TypewriterText } from '~/types'
 import { useMounted } from '~/composables/useMounted'
 
@@ -199,6 +164,86 @@ const skills = ref<Skill[]>([
     level: 'advanced',
     icon: 'academic-cap',
     technologies: []
+  },
+  {
+    id: '3',
+    name: 'Python',
+    category: 'Backend',
+    level: 'expert',
+    icon: 'code-bracket',
+    technologies: []
+  },
+  {
+    id: '4',
+    name: 'Tailwind CSS',
+    category: 'Frontend',
+    level: 'expert',
+    icon: 'paint-brush',
+    technologies: []
+  },
+  {
+    id: '5',
+    name: 'NestJS',
+    category: 'Backend',
+    level: 'advanced',
+    icon: 'server',
+    technologies: []
+  },
+  {
+    id: '6',
+    name: 'React',
+    category: 'Frontend',
+    level: 'advanced',
+    icon: 'cube',
+    technologies: []
+  },
+  {
+    id: '7',
+    name: 'Svelte',
+    category: 'Frontend',
+    level: 'intermediate',
+    icon: 'bolt',
+    technologies: []
+  },
+  {
+    id: '8',
+    name: 'Django',
+    category: 'Backend',
+    level: 'advanced',
+    icon: 'server-stack',
+    technologies: []
+  },
+  {
+    id: '9',
+    name: 'Docker',
+    category: 'DevOps',
+    level: 'intermediate',
+    icon: 'cube-transparent',
+    technologies: []
+  },
+  {
+    id: '10',
+    name: 'Node.js',
+    category: 'Backend',
+    level: 'advanced',
+    icon: 'server',
+    technologies: []
+  },
+  {
+    id: '11',
+    name: 'PostgreSQL',
+    category: 'Database',
+    level: 'intermediate',
+    icon: 'database',
+    technologies: []
+  },
+  {
+    id: '12',
+    name: 'Git',
+    category: 'DevOps',
+    level: 'expert',
+    icon: 'code-branch',
+    technologies: []
   }
 ])
 
@@ -216,6 +261,13 @@ const actionButtons = ref([
 
 // Composables
 const { isMounted } = useMounted()
+const handleAnimationStart = () => {
+  console.log('Animación iniciada')
+}
+
+const handleAnimationComplete = () => {
+  console.log('Animación completada')
+}
 
 </script>
 
