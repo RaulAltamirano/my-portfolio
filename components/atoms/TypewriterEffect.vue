@@ -32,6 +32,7 @@ const currentIndex = ref(0)
 const isTyping = ref(true)
 
 onMounted(() => {
+  console.log('TypewriterEffect mounted with texts:', props.texts)
   startTypewriter()
 })
 
