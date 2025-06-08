@@ -77,3 +77,4 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 ## Features
 - Interactive portfolio
 ## Features
+- Interactive portfolio
