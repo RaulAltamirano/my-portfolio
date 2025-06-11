@@ -1,1 +1,38 @@
 @import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode colors */
+    --color-primary-light: 59 130 246;    /* blue-500 */
+    --color-primary-dark: 96 165 250;     /* blue-400 */
+    --color-background-light: 255 255 255; /* white */
+    --color-background-dark: 26 26 26;    /* dark gray */
+    --color-text-light: 31 41 55;         /* gray-800 */
+    --color-text-dark: 243 244 246;       /* gray-100 */
+  }
+
+  .dark {
+    /* Dark mode colors */
+    --color-primary-light: 96 165 250;    /* blue-400 */
+    --color-primary-dark: 59 130 246;     /* blue-500 */
+    --color-background-light: 26 26 26;   /* dark gray */
+    --color-background-dark: 255 255 255; /* white */
+    --color-text-light: 243 244 246;      /* gray-100 */
+    --color-text-dark: 31 41 55;          /* gray-800 */
+  }
+}
+
+/* Utilidades personalizadas */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}

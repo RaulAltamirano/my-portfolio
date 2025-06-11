@@ -1,0 +1,49 @@
+:root {
+  /* Light mode variables */
+  --color-primary-light: 59 130 246; /* blue-500 */
+  --color-primary-dark: 37 99 235; /* blue-600 */
+  --color-background-light: 255 255 255; /* white */
+  --color-background-dark: 15 23 42; /* slate-900 */
+  --color-text-light: 15 23 42; /* slate-900 */
+  --color-text-dark: 248 250 252; /* slate-50 */
+}
+
+.dark {
+  /* Dark mode variables */
+  --color-primary-light: 96 165 250; /* blue-400 */
+  --color-primary-dark: 59 130 246; /* blue-500 */
+  --color-background-light: 15 23 42; /* slate-900 */
+  --color-background-dark: 2 6 23; /* slate-950 */
+  --color-text-light: 248 250 252; /* slate-50 */
+  --color-text-dark: 241 245 249; /* slate-100 */
+}
+
+/* Transiciones suaves para el cambio de tema */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Asegurar que las transiciones no afecten a las animaciones */
+.animate-* {
+  transition: none !important;
+}
+
+/* Optimizaciones para el modo oscuro */
+.dark {
+  color-scheme: dark;
+}
+
+/* Asegurar que los elementos con backdrop-filter funcionen correctamente */
+.backdrop-blur {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Mejorar la legibilidad del texto en modo oscuro */
+.dark * {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} 
