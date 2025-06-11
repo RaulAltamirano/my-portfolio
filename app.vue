@@ -8,7 +8,7 @@
       />
     </ClientOnly>
     
-    <LayoutHeader />
+    <NavMenu />
     
     <main >
       <NuxtPage v-slot="{ Component }">
@@ -31,9 +31,12 @@
 </template>
 
 <script setup lang="ts">
+import NavMenu from '@/components/layout/NavMenu/NavMenu.vue'
+import LayoutFooter from '@/components/layout/Footer.vue'
+import { useColorMode } from '#imports'
 
-import LayoutHeader from '~/components/layout/NavMenu.vue'
-import LayoutFooter from '~/components/layout/Footer.vue'
+// Initialize color mode
+const colorMode = useColorMode()
 
 // SEO optimization
 useHead({
@@ -41,7 +44,7 @@ useHead({
   meta: [
     { name: 'description', content: 'Desarrollador Full Stack Senior especializado en Vue.js, Nuxt.js, Node.js y arquitecturas escalables. Portfolio de proyectos innovadores y soluciones tecnológicas.' },
     { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-    { name: 'theme-color', content: '#3b82f6' },
+    { name: 'theme-color', content: colorMode.value === 'dark' ? '#1e293b' : '#ffffff' },
     { property: 'og:title', content: 'Raul Altamirano - Desarrollador Full Stack Senior' },
     { property: 'og:description', content: 'Portfolio profesional con proyectos innovadores y experiencia en desarrollo web moderno' },
     { property: 'og:type', content: 'website' },
