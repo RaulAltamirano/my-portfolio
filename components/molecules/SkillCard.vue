@@ -50,11 +50,16 @@
             }"
             :style="{ transform: `translateZ(calc(var(--card-depth) * 1.2))` }"
           >
-            <component 
-              :is="`heroicons-outline:${props.icon}`" 
-              class="w-8 h-8 text-white dark:text-white/90 transform-gpu transition-all duration-500"
-              :class="{ 'scale-110 rotate-3': isHovered }"
-            />
+            <template v-if="props.logo">
+              <img :src="props.logo" :alt="props.name" class="w-10 h-10 object-contain" />
+            </template>
+            <template v-else>
+              <component 
+                :is="`heroicons-outline:${props.icon}`" 
+                class="w-8 h-8 text-white dark:text-white/90 transform-gpu transition-all duration-500"
+                :class="{ 'scale-110 rotate-3': isHovered }"
+              />
+            </template>
           </div>
         </div>
 
