@@ -27,18 +27,8 @@
         <!-- Category Badge -->
         <Motion
           :initial="{ opacity: 0, y: 50, scale: 0.95 }"
-          :visibleOnce="{
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { 
-              type: 'spring', 
-              stiffness: 100, 
-              damping: 15, 
-              delay: 100,
-              duration: 0.5
-            },
-          }"
+          :animate="{ opacity: 1, y: 0, scale: 1 }"
+          :transition="{ duration: 0.6 }"
           tag="div"
           class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/50 dark:to-purple-950/50 rounded-full border border-blue-200/50 dark:border-blue-800/50 mb-6"
         >
@@ -50,18 +40,8 @@
         <!-- Title with Gradient -->
         <Motion
           :initial="{ opacity: 0, y: 50, scale: 0.95 }"
-          :visibleOnce="{
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { 
-              type: 'spring', 
-              stiffness: 100, 
-              damping: 15, 
-              delay: 150,
-              duration: 0.5
-            },
-          }"
+          :animate="{ opacity: 1, y: 0, scale: 1 }"
+          :transition="{ duration: 0.6 }"
           tag="h2"
           class="text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight relative"
         >
@@ -76,18 +56,8 @@
         <!-- Description with Subtle Glow -->
         <Motion
           :initial="{ opacity: 0, y: 50, scale: 0.95 }"
-          :visibleOnce="{
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { 
-              type: 'spring', 
-              stiffness: 100, 
-              damping: 15, 
-              delay: 200,
-              duration: 0.5
-            },
-          }"
+          :animate="{ opacity: 1, y: 0, scale: 1 }"
+          :transition="{ duration: 0.6 }"
           tag="p"
           class="text-xl lg:text-2xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed relative"
         >
@@ -100,23 +70,9 @@
         <Motion
           v-for="(project, index) in projects" 
           :key="project.id"
-          :initial="{
-            opacity: 0,
-            y: 50,
-            scale: 0.95
-          }"
-          :visibleOnce="{
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: { 
-              type: 'spring', 
-              stiffness: 100, 
-              damping: 15, 
-              delay: 300 + (index * 100),
-              duration: 0.5
-            },
-          }"
+          :initial="{ opacity: 0, y: 50, scale: 0.95 }"
+          :animate="{ opacity: 1, y: 0, scale: 1 }"
+          :transition="{ duration: 0.6, delay: 0.1 * index }"
           tag="div"
           class="group relative overflow-hidden rounded-xl border border-slate-200/50 dark:border-slate-800/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-all duration-300 ease-out"
         >
@@ -144,6 +100,7 @@ import { ref } from 'vue'
 import type { Project } from '~/types'
 import { Motion } from '@motionone/vue'
 import ProjectCard from '~/components/organisms/ProjectCard.vue'
+
 
 const props = defineProps<{
   title: string
