@@ -27,6 +27,7 @@ export interface Skill {
   category: string;
   level: 'basic' | 'intermediate' | 'advanced';
   icon: 'code' | 'database' | 'puzzle' | 'sparkles' | 'academic-cap' | 'beaker' | 'light-bulb' | 'pencil-square';
+  logo?: string;
 }
 
 export interface TypewriterText {
