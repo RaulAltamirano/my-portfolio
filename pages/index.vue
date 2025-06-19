@@ -25,6 +25,7 @@
       :category="projectsCategory"
       :description="projectsDescription"
       :projects="projects"
+      :colors="projectsColors"
     />
     <ExperienceSection
       class="section-experience"
@@ -33,6 +34,7 @@
       :category="experienceCategory"
       :description="experienceDescription"
       :experiences="experiences"
+      :colors="experienceColors"
     />
     <ContactSection
       class="section-contact"
@@ -80,7 +82,9 @@ const {
   contactSubtitle,
   contactCategory,
   contactDescription,
-  scrollText 
+  scrollText,
+  projectsColors,
+  experienceColors
 } = useContent()
 
 // Data
@@ -145,6 +149,7 @@ const skills = ref<Skill[]>([
     category: 'Frontend',
     level: 'advanced',
     icon: 'code',
+    logo: '/assets/techlogos/icons8-vue.js-96.png',
     technologies: []
   },
   {
@@ -161,6 +166,7 @@ const skills = ref<Skill[]>([
     category: 'Backend',
     level: 'advanced',
     icon: 'code',
+    logo: '/assets/techlogos/icons8-python-480.png',
     technologies: []
   },
   {
@@ -169,6 +175,7 @@ const skills = ref<Skill[]>([
     category: 'Frontend',
     level: 'advanced',
     icon: 'pencil-square',
+    logo: '/assets/techlogos/icons8-tailwindcss-480.png',
     technologies: []
   },
   {
@@ -177,6 +184,7 @@ const skills = ref<Skill[]>([
     category: 'Backend',
     level: 'advanced',
     icon: 'code',
+    logo: '/assets/techlogos/icons8-nestjs-logo-480.png',
     technologies: []
   },
   {
@@ -209,6 +217,7 @@ const skills = ref<Skill[]>([
     category: 'DevOps',
     level: 'intermediate',
     icon: 'puzzle',
+    logo: '/assets/techlogos/icons8-docker-240.png',
     technologies: []
   },
   {
@@ -217,6 +226,7 @@ const skills = ref<Skill[]>([
     category: 'Backend',
     level: 'advanced',
     icon: 'code',
+    logo: '/assets/techlogos/node-js.png',
     technologies: []
   },
   {
@@ -233,6 +243,7 @@ const skills = ref<Skill[]>([
     category: 'DevOps',
     level: 'advanced',
     icon: 'code',
+    logo: '/assets/techlogos/atom.png',
     technologies: []
   }
 ])
