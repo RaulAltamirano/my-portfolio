@@ -23,47 +23,13 @@
       </div>
 
       <!-- Header de sección -->
-      <div class="text-center mb-20 relative">
-        <!-- Category Badge -->
-        <Motion
-          :initial="{ opacity: 0, y: 50, scale: 0.95 }"
-          :animate="{ opacity: 1, y: 0, scale: 1 }"
-          :transition="{ duration: 0.6 }"
-          tag="div"
-          class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/50 dark:to-purple-950/50 rounded-full border border-blue-200/50 dark:border-blue-800/50 mb-6"
-        >
-          <span class="text-sm font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
-            {{ category }}
-          </span>
-        </Motion>
-
-        <!-- Title with Gradient -->
-        <Motion
-          :initial="{ opacity: 0, y: 50, scale: 0.95 }"
-          :animate="{ opacity: 1, y: 0, scale: 1 }"
-          :transition="{ duration: 0.6 }"
-          tag="h2"
-          class="text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 leading-tight relative"
-        >
-          <span class="block">
-            {{ title }}
-          </span>
-          <span class="block bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
-            {{ subtitle }}
-          </span>
-        </Motion>
-
-        <!-- Description with Subtle Glow -->
-        <Motion
-          :initial="{ opacity: 0, y: 50, scale: 0.95 }"
-          :animate="{ opacity: 1, y: 0, scale: 1 }"
-          :transition="{ duration: 0.6 }"
-          tag="p"
-          class="text-xl lg:text-2xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed relative"
-        >
-          {{ description }}
-        </Motion>
-      </div>
+      <HeaderSection
+        :title="title"
+        :subtitle="subtitle"
+        :category="category"
+        :description="description"
+        :colors="colors"
+      />
 
       <!-- Projects Grid with Dynamic Effects -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 relative">
@@ -100,7 +66,7 @@ import { ref } from 'vue'
 import type { Project } from '~/types'
 import { Motion } from '@motionone/vue'
 import ProjectCard from '~/components/organisms/ProjectCard.vue'
-
+import HeaderSection from '~/components/organisms/HeaderSection.vue'
 
 const props = defineProps<{
   title: string
@@ -108,6 +74,7 @@ const props = defineProps<{
   category: string
   description: string
   projects: Project[]
+  colors: { from: string; to: string }
 }>()
 
 // State for hover and focus effects
