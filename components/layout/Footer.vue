@@ -1,20 +1,35 @@
 <template>
   <footer
-    class="w-full border-t border-gray-200/20 dark:border-gray-700/20 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 transition-all duration-300"
+    class="w-full border-t backdrop-blur-xl transition-all duration-300"
+    :class="[
+      isDark 
+        ? 'border-slate-700/20 bg-slate-900/80' 
+        : 'border-slate-200/20 bg-white/80'
+    ]"
     role="contentinfo"
   >
     <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Contacto -->
         <div>
-          <h3 class="text-sm font-semibold text-gray-400 dark:text-gray-300 tracking-wider uppercase mb-4">
+          <h3 
+            class="text-sm font-semibold tracking-wider uppercase mb-4 transition-colors duration-300"
+            :class="[
+              isDark ? 'text-slate-300' : 'text-slate-400'
+            ]"
+          >
             Contacto
           </h3>
           <ul class="space-y-3">
             <li v-for="contact in contacts" :key="contact.name">
               <a
                 :href="contact.href"
-                class="flex items-center gap-2 text-base text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+                class="flex items-center gap-2 text-base px-2 py-1 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2"
+                :class="[
+                  isDark 
+                    ? 'text-slate-300 hover:text-blue-400 hover:bg-slate-800/50 focus:ring-blue-400/50' 
+                    : 'text-slate-500 hover:text-blue-600 hover:bg-slate-100/50 focus:ring-blue-500/50'
+                ]"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -28,14 +43,24 @@
         </div>
         <!-- Enlaces -->
         <div>
-          <h3 class="text-sm font-semibold text-gray-400 dark:text-gray-300 tracking-wider uppercase mb-4">
+          <h3 
+            class="text-sm font-semibold tracking-wider uppercase mb-4 transition-colors duration-300"
+            :class="[
+              isDark ? 'text-slate-300' : 'text-slate-400'
+            ]"
+          >
             Enlaces
           </h3>
           <ul class="space-y-3">
             <li v-for="link in links" :key="link.name">
               <NuxtLink
                 :to="link.href"
-                class="text-base text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+                class="text-base px-2 py-1 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2"
+                :class="[
+                  isDark 
+                    ? 'text-slate-300 hover:text-blue-400 hover:bg-slate-800/50 focus:ring-blue-400/50' 
+                    : 'text-slate-500 hover:text-blue-600 hover:bg-slate-100/50 focus:ring-blue-500/50'
+                ]"
               >
                 {{ link.name }}
               </NuxtLink>
@@ -44,14 +69,24 @@
         </div>
         <!-- Redes Sociales -->
         <div>
-          <h3 class="text-sm font-semibold text-gray-400 dark:text-gray-300 tracking-wider uppercase mb-4">
+          <h3 
+            class="text-sm font-semibold tracking-wider uppercase mb-4 transition-colors duration-300"
+            :class="[
+              isDark ? 'text-slate-300' : 'text-slate-400'
+            ]"
+          >
             Redes Sociales
           </h3>
           <ul class="space-y-3">
             <li v-for="social in socials" :key="social.name">
               <a
                 :href="social.href"
-                class="flex items-center gap-2 text-base text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+                class="flex items-center gap-2 text-base px-2 py-1 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2"
+                :class="[
+                  isDark 
+                    ? 'text-slate-300 hover:text-blue-400 hover:bg-slate-800/50 focus:ring-blue-400/50' 
+                    : 'text-slate-500 hover:text-blue-600 hover:bg-slate-100/50 focus:ring-blue-500/50'
+                ]"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -65,8 +100,18 @@
           </ul>
         </div>
       </div>
-      <div class="mt-10 border-t border-gray-200 dark:border-slate-700 pt-8">
-        <p class="text-base text-gray-400 dark:text-slate-500 text-center">
+      <div 
+        class="mt-10 border-t pt-8 transition-colors duration-300"
+        :class="[
+          isDark ? 'border-slate-700' : 'border-slate-200'
+        ]"
+      >
+        <p 
+          class="text-base text-center transition-colors duration-300"
+          :class="[
+            isDark ? 'text-slate-500' : 'text-slate-400'
+          ]"
+        >
           &copy; {{ year }} Raul Altamirano. Todos los derechos reservados.
         </p>
       </div>
@@ -85,6 +130,9 @@ import {
   GlobeAltIcon,
   DocumentTextIcon
 } from '@heroicons/vue/24/outline'
+
+// Importar el composable de dark mode
+const { isDark } = useDarkMode()
 
 const year = new Date().getFullYear()
 
@@ -112,10 +160,43 @@ const socials = [
   -webkit-backdrop-filter: blur(16px);
 }
 
+/* Hover effects mejorados */
+a:hover,
+.nuxt-link-active {
+  transform: translateX(2px);
+}
+
+/* Focus states mejorados */
+a:focus-visible,
+.nuxt-link-active:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px currentColor;
+  border-radius: 0.5rem;
+}
+
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+  
+  a:hover,
+  .nuxt-link-active {
+    transform: none;
+  }
+}
+
+/* Performance optimizations */
+footer {
+  will-change: background-color, border-color;
+  backface-visibility: hidden;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 </style>

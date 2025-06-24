@@ -1,0 +1,99 @@
+/* Dark Mode Transitions and Effects */
+
+/* Smooth transitions for dark mode changes */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Ensure animations are not affected by theme transitions */
+.animate-*,
+.motion-* {
+  transition: none !important;
+}
+
+/* Dark mode specific optimizations */
+.dark {
+  color-scheme: dark;
+}
+
+/* Enhanced glassmorphism for dark mode */
+.dark .backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.dark .backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.6);
+}
+
+/* Improved shadows for dark mode */
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced focus rings for dark mode */
+.dark .focus-visible\:ring-2:focus-visible {
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.5);
+}
+
+/* Improved hover effects for dark mode */
+.dark .hover\:shadow-lg:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+/* Better contrast for dark mode borders */
+.dark .border-slate-700\/40 {
+  border-color: rgba(51, 65, 85, 0.6);
+}
+
+.dark .border-slate-200\/50 {
+  border-color: rgba(226, 232, 240, 0.3);
+}
+
+/* Optimized text rendering for dark mode */
+.dark * {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+} 
