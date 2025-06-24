@@ -11,14 +11,15 @@ export default defineNuxtConfig({
   css: [
     '@/assets/css/base.css',
     '~/assets/css/tailwind.css',
-    '~/assets/css/animations.css'
+    '~/assets/css/animations.css',
+    '~/assets/css/dark-mode.css'
   ],
   colorMode: {
     classSuffix: '',
     preference: 'system',
     fallback: 'light',
     storageKey: 'nuxt-color-mode',
-    dataValue: 'theme',
+    dataValue: 'theme'
   },
   app: {
     head: {
