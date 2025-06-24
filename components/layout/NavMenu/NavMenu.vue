@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useColorMode } from '#imports'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { 
   HomeIcon, 
   AcademicCapIcon, 
@@ -27,9 +26,8 @@ interface NavigationItem {
   }
 }
 
-// State management
-const colorMode = useColorMode()
-const isDark = computed(() => colorMode.value === 'dark')
+// State management - Usar el composable useDarkMode
+const { isDark, toggleDarkMode: toggleTheme } = useDarkMode()
 const isMobileMenuOpen = ref(false)
 const currentHash = ref('#home')
 const isScrolled = ref(false)
@@ -37,6 +35,7 @@ const currentSection = ref<SectionNames>('Home')
 const isTransitioning = ref(false)
 const previousSection = ref<SectionNames>('Home')
 const transitionDirection = ref<'forward' | 'backward'>('forward')
+const isTogglingMode = ref(false)
 
 // Navigation items with enhanced metadata and colors
 const navigation: NavigationItem[] = [
@@ -78,32 +77,32 @@ const currentColors = computed(() => {
   return currentItem?.colors || navigation[0].colors
 })
 
-// Helper function to get color classes
+// Helper function to get color classes with improved dark mode support
 const getColorClasses = (baseColor: string, variant: 'text' | 'bg' | 'border' = 'text') => {
   const colorMap = {
     blue: {
-      text: 'text-blue-600 dark:text-blue-400',
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
+      text: isDark.value ? 'text-blue-400' : 'text-blue-600',
+      bg: isDark.value ? 'bg-blue-900/30' : 'bg-blue-50',
       border: 'border-blue-500'
     },
     emerald: {
-      text: 'text-emerald-600 dark:text-emerald-400',
-      bg: 'bg-emerald-50 dark:bg-emerald-900/20',
+      text: isDark.value ? 'text-emerald-400' : 'text-emerald-600',
+      bg: isDark.value ? 'bg-emerald-900/30' : 'bg-emerald-50',
       border: 'border-emerald-500'
     },
     purple: {
-      text: 'text-purple-600 dark:text-purple-400',
-      bg: 'bg-purple-50 dark:bg-purple-900/20',
+      text: isDark.value ? 'text-purple-400' : 'text-purple-600',
+      bg: isDark.value ? 'bg-purple-900/30' : 'bg-purple-50',
       border: 'border-purple-500'
     },
     orange: {
-      text: 'text-orange-600 dark:text-orange-400',
-      bg: 'bg-orange-50 dark:bg-orange-900/20',
+      text: isDark.value ? 'text-orange-400' : 'text-orange-600',
+      bg: isDark.value ? 'bg-orange-900/30' : 'bg-orange-50',
       border: 'border-orange-500'
     },
     indigo: {
-      text: 'text-indigo-600 dark:text-indigo-400',
-      bg: 'bg-indigo-50 dark:bg-indigo-900/20',
+      text: isDark.value ? 'text-indigo-400' : 'text-indigo-600',
+      bg: isDark.value ? 'bg-indigo-900/30' : 'bg-indigo-50',
       border: 'border-indigo-500'
     }
   }
@@ -117,25 +116,40 @@ let observer: IntersectionObserver | null = null
 const setupIntersectionObserver = () => {
   if (!process.client) return
 
+  // Limpiar observer anterior si existe
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
+
   observer = new IntersectionObserver(
     (entries) => {
+      // Encontrar la sección con mayor intersección (más visible)
+      let maxRatio = 0
+      let mostVisibleSection: Element | null = null
+      
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.id
-          const sectionName = navigation.find(item => 
-            item.href === `#${sectionId}`
-          )?.name
-          
-          if (sectionName) {
-            currentSection.value = sectionName
-            currentHash.value = `#${sectionId}`
-          }
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio
+          mostVisibleSection = entry.target
         }
       })
+      
+      if (mostVisibleSection && maxRatio > 0.1) { // Solo cambiar si hay al menos 10% de visibilidad
+        const sectionId = (mostVisibleSection as HTMLElement).id
+        const sectionName = navigation.find(item => 
+          item.href === `#${sectionId}`
+        )?.name
+        
+        if (sectionName) {
+          currentSection.value = sectionName
+          currentHash.value = `#${sectionId}`
+        }
+      }
     },
     {
-      threshold: 0.3,
-      rootMargin: '-20% 0px -20% 0px'
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], // Múltiples thresholds para mejor detección
+      rootMargin: '-10% 0px -10% 0px' // Margen más conservador
     }
   )
 
@@ -152,12 +166,40 @@ const setupIntersectionObserver = () => {
 const handleScroll = () => {
   if (process.client) {
     isScrolled.value = window.scrollY > 20
+    
+    // Fallback: detectar sección actual por posición de scroll
+    const sections = navigation.map(item => ({
+      ...item,
+      element: document.querySelector(item.href) as HTMLElement
+    })).filter(item => item.element)
+    
+    if (sections.length > 0) {
+      const scrollPosition = window.scrollY + window.innerHeight / 2
+      let currentSectionByScroll = sections[0]
+      
+      sections.forEach(section => {
+        const rect = section.element.getBoundingClientRect()
+        const elementTop = rect.top + window.scrollY
+        const elementBottom = elementTop + rect.height
+        
+        if (scrollPosition >= elementTop && scrollPosition <= elementBottom) {
+          currentSectionByScroll = section
+        }
+      })
+      
+      if (currentSectionByScroll.name !== currentSection.value) {
+        currentSection.value = currentSectionByScroll.name
+        currentHash.value = currentSectionByScroll.href
+      }
+    }
   }
 }
 
-// Methods
+// Methods - Mejorar el toggle del dark mode
 const toggleDarkMode = () => {
-  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+  isTogglingMode.value = true
+  toggleTheme()
+  setTimeout(() => { isTogglingMode.value = false }, 400)
 }
 
 const toggleMobileMenu = () => {
@@ -189,17 +231,49 @@ const updateHash = () => {
 
 const isCurrentSection = (href: string) => currentHash.value === href
 
+// --- Accesibilidad y UX ---
+// Referencia al menú móvil para click fuera
+const mobileMenuRef = ref<HTMLElement | null>(null)
+
+// Cerrar menú móvil con Esc y click fuera
+const handleKeydown = (e: KeyboardEvent) => {
+  if (isMobileMenuOpen.value && e.key === 'Escape') {
+    closeMobileMenu()
+  }
+}
+const handleClickOutside = (e: MouseEvent) => {
+  if (isMobileMenuOpen.value && mobileMenuRef.value && !mobileMenuRef.value.contains(e.target as Node)) {
+    closeMobileMenu()
+  }
+}
+
+// --- Mejoras de accesibilidad ---
+const handleNavKeydown = (e: KeyboardEvent, href: string) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault()
+    handleNavClick(href)
+  }
+}
+
 // Lifecycle hooks
 onMounted(() => {
   if (process.client) {
     updateHash()
     window.addEventListener('hashchange', updateHash)
     window.addEventListener('scroll', handleScroll)
-    
-    // Setup intersection observer after a small delay to ensure DOM is ready
+    document.addEventListener('keydown', handleKeydown)
+    document.addEventListener('mousedown', handleClickOutside)
     setTimeout(() => {
       setupIntersectionObserver()
-    }, 100)
+    }, 200)
+    
+    // Verificación adicional después de 1 segundo
+    setTimeout(() => {
+      const skillsSection = document.querySelector('#skills')
+      if (!skillsSection) {
+        setupIntersectionObserver()
+      }
+    }, 1000)
   }
 })
 
@@ -207,7 +281,8 @@ onUnmounted(() => {
   if (process.client) {
     window.removeEventListener('hashchange', updateHash)
     window.removeEventListener('scroll', handleScroll)
-    
+    document.removeEventListener('keydown', handleKeydown)
+    document.removeEventListener('mousedown', handleClickOutside)
     if (observer) {
       observer.disconnect()
     }
@@ -220,12 +295,19 @@ onUnmounted(() => {
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     :class="[
       isScrolled 
-        ? 'py-2 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 shadow-lg' 
-        : 'py-4 backdrop-blur-md bg-white/60 dark:bg-gray-900/60',
-      'border-b border-gray-200/20 dark:border-gray-700/20'
+        ? 'py-2 backdrop-blur-xl shadow-lg' 
+        : 'py-4 backdrop-blur-md',
+      isDark 
+        ? isScrolled 
+          ? 'bg-slate-900/90 border-slate-700/30' 
+          : 'bg-slate-900/70 border-slate-700/20'
+        : isScrolled 
+          ? 'bg-white/90 border-slate-200/30' 
+          : 'bg-white/70 border-slate-200/20',
+      'border-b'
     ]"
     role="navigation"
-    aria-label="Main navigation"
+    aria-label="Navegación principal"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-12">
@@ -233,17 +315,18 @@ onUnmounted(() => {
         <div class="flex-shrink-0">
           <NuxtLink 
             to="#home" 
-            class="relative group inline-flex items-center space-x-3"
+            class="relative group inline-flex items-center space-x-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 rounded-lg"
             @click="handleNavClick('#home')"
-            aria-label="Go to home section"
+            tabindex="0"
+            @keydown="(e: KeyboardEvent) => handleNavKeydown(e, '#home')"
           >
             <!-- Personalized logo background -->
             <div 
               class="relative w-10 h-10 rounded-xl overflow-hidden transition-all duration-300 group-hover:scale-105"
               :class="[
                 isDark 
-                  ? 'bg-gradient-to-br from-blue-600/20 to-cyan-500/20 ring-1 ring-blue-500/30' 
-                  : 'bg-gradient-to-br from-blue-600/10 to-cyan-500/10 ring-1 ring-blue-500/20'
+                  ? 'bg-gradient-to-br from-blue-500/30 to-cyan-400/30 ring-1 ring-blue-400/40' 
+                  : 'bg-gradient-to-br from-blue-600/20 to-cyan-500/20 ring-1 ring-blue-500/30'
               ]"
             >
               <!-- Animated background overlay -->
@@ -270,9 +353,9 @@ onUnmounted(() => {
                 Juan Doe
               </span>
               <span 
-                class="text-xs font-medium tracking-wide opacity-70 transition-all duration-300"
+                class="text-xs font-medium tracking-wide transition-all duration-300"
                 :class="[
-                  isDark ? 'text-gray-400' : 'text-gray-600'
+                  isDark ? 'text-slate-300' : 'text-slate-600'
                 ]"
               >
                 Full Stack Developer
@@ -286,13 +369,17 @@ onUnmounted(() => {
           <template v-for="item in navigation" :key="item.name">
             <button
               :class="[
-                'group relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300',
+                'group relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500',
                 isCurrentSection(item.href)
                   ? getColorClasses(item.colors.base, 'text')
-                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+                  : isDark 
+                    ? 'text-slate-300 hover:text-white' 
+                    : 'text-slate-700 hover:text-slate-900'
               ]"
               @click="handleNavClick(item.href)"
               :aria-current="isCurrentSection(item.href) ? 'page' : undefined"
+              :tabindex="0"
+              @keydown="e => handleNavKeydown(e, item.href)"
             >
               <div class="flex items-center space-x-2">
                 <component 
@@ -301,7 +388,9 @@ onUnmounted(() => {
                   :class="[
                     isCurrentSection(item.href)
                       ? `${getColorClasses(item.colors.base, 'text')} transform scale-110`
-                      : 'text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200 group-hover:scale-110'
+                      : isDark 
+                        ? 'text-slate-400 group-hover:text-slate-200 group-hover:scale-110' 
+                        : 'text-slate-500 group-hover:text-slate-700 group-hover:scale-110'
                   ]"
                 />
                 <span>{{ item.name }}</span>
@@ -324,8 +413,8 @@ onUnmounted(() => {
                 class="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 :class="[
                   isDark 
-                    ? 'bg-gray-800/50' 
-                    : 'bg-gray-100/80'
+                    ? 'bg-slate-800/60' 
+                    : 'bg-slate-100/80'
                 ]"
               />
             </button>
@@ -334,13 +423,15 @@ onUnmounted(() => {
           <!-- Theme Toggle with enhanced animation -->
           <button
             @click="toggleDarkMode"
-            class="relative ml-4 p-2 rounded-lg transition-all duration-300"
+            class="relative ml-4 p-2 rounded-lg transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
             :class="[
               isDark 
-                ? 'text-gray-300 hover:text-blue-400 hover:bg-blue-500/10' 
-                : 'text-gray-700 hover:text-blue-600 hover:bg-blue-500/10'
+                ? 'text-slate-300 hover:text-blue-400 hover:bg-blue-500/15' 
+                : 'text-slate-700 hover:text-blue-600 hover:bg-blue-500/15',
+              isTogglingMode ? 'animate-pulse' : ''
             ]"
-            :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+            :aria-label="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+            :tabindex="0"
           >
             <div class="relative z-10">
               <SunIcon v-if="isDark" class="w-5 h-5 transform transition-transform duration-300 hover:rotate-45" />
@@ -352,8 +443,8 @@ onUnmounted(() => {
               class="absolute inset-0 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300"
               :class="[
                 isDark 
-                  ? 'bg-blue-500/5' 
-                  : 'bg-blue-500/10'
+                  ? 'bg-blue-500/10' 
+                  : 'bg-blue-500/15'
               ]"
             />
           </button>
@@ -363,14 +454,15 @@ onUnmounted(() => {
         <div class="flex md:hidden">
           <button
             @click="toggleMobileMenu"
-            class="relative p-2 rounded-lg transition-all duration-300"
+            class="relative p-2 rounded-lg transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
             :class="[
               isDark 
-                ? 'text-gray-300 hover:text-blue-400 hover:bg-blue-500/10' 
-                : 'text-gray-700 hover:text-blue-600 hover:bg-blue-500/10'
+                ? 'text-slate-300 hover:text-blue-400 hover:bg-blue-500/15' 
+                : 'text-slate-700 hover:text-blue-600 hover:bg-blue-500/15'
             ]"
-            :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
+            :aria-label="isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'"
             :aria-expanded="isMobileMenuOpen"
+            :tabindex="0"
           >
             <div class="relative z-10">
               <Bars3Icon 
@@ -388,8 +480,8 @@ onUnmounted(() => {
               class="absolute inset-0 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300"
               :class="[
                 isDark 
-                  ? 'bg-blue-500/5' 
-                  : 'bg-blue-500/10'
+                  ? 'bg-blue-500/10' 
+                  : 'bg-blue-500/15'
               ]"
             />
           </button>
@@ -408,24 +500,30 @@ onUnmounted(() => {
     >
       <div
         v-if="isMobileMenuOpen"
-        class="md:hidden absolute top-full left-0 right-0 backdrop-blur-xl border-b border-gray-200/20 dark:border-gray-700/20"
+        ref="mobileMenuRef"
+        class="md:hidden absolute top-full left-0 right-0 backdrop-blur-xl border-b shadow-xl focus:outline-none"
         :class="[
           isDark 
-            ? 'bg-gray-900/95' 
-            : 'bg-white/95'
+            ? 'bg-slate-900/95 border-slate-700/30' 
+            : 'bg-white/95 border-slate-200/30'
         ]"
+        tabindex="0"
       >
         <div class="px-2 pt-2 pb-3 space-y-1">
           <template v-for="item in navigation" :key="item.name">
             <button
               :class="[
-                'w-full flex items-center px-3 py-2 rounded-lg text-base font-medium transition-all duration-300',
+                'w-full flex items-center px-3 py-2 rounded-lg text-base font-medium transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500',
                 isCurrentSection(item.href)
                   ? `${getColorClasses(item.colors.base, 'text')} ${getColorClasses(item.colors.base, 'bg')}`
-                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                  : isDark 
+                    ? 'text-slate-300 hover:text-white hover:bg-slate-800/60' 
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               ]"
               @click="handleNavClick(item.href)"
               :aria-current="isCurrentSection(item.href) ? 'page' : undefined"
+              :tabindex="0"
+              @keydown="e => handleNavKeydown(e, item.href)"
             >
               <component 
                 :is="item.icon" 
@@ -433,7 +531,9 @@ onUnmounted(() => {
                 :class="[
                   isCurrentSection(item.href)
                     ? `${getColorClasses(item.colors.base, 'text')} transform scale-110`
-                    : 'text-gray-500 dark:text-gray-400'
+                    : isDark 
+                      ? 'text-slate-400' 
+                      : 'text-slate-500'
                 ]"
               />
               {{ item.name }}
@@ -443,17 +543,19 @@ onUnmounted(() => {
           <!-- Mobile Theme Toggle -->
           <button
             @click="toggleDarkMode"
-            class="w-full flex items-center px-3 py-2 rounded-lg text-base font-medium transition-all duration-300"
+            class="w-full flex items-center px-3 py-2 rounded-lg text-base font-medium transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
             :class="[
               isDark 
-                ? 'text-gray-300 hover:text-white hover:bg-gray-800/50' 
-                : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+                ? 'text-slate-300 hover:text-white hover:bg-slate-800/60' 
+                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50',
+              isTogglingMode ? 'animate-pulse' : ''
             ]"
-            :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+            :aria-label="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+            :tabindex="0"
           >
             <SunIcon v-if="isDark" class="w-5 h-5 mr-3" />
             <MoonIcon v-else class="w-5 h-5 mr-3" />
-            {{ isDark ? 'Light Mode' : 'Dark Mode' }}
+            {{ isDark ? 'Modo claro' : 'Modo oscuro' }}
           </button>
         </div>
       </div>
