@@ -1,5 +1,5 @@
 <template>
-  <div class="experience-card" v-if="experience">
+  <div class="experience-card" v-if="experience" ref="cardRef">
     <div 
       class="group relative rounded-xl p-6 border transition-all duration-300 hover:shadow-lg"
       :class="[
@@ -131,7 +131,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Experience } from '~/types';
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import gsap from 'gsap'
+import { useScrollTrigger } from '~/plugins/gsap.client'
+import type { Experience } from '~/types'
 
 // Importar el composable de dark mode
 const { isDark } = useDarkMode()
@@ -139,62 +142,100 @@ const { isDark } = useDarkMode()
 const props = defineProps<{
   experience: Experience | null
   sectionColors: { from: string; to: string }
+  staggerIndex?: number // Para listas animadas
 }>()
 
-// Keyframes for fadeInUp animation
-const fadeInUpKeyframes = `
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-`;
+const cardRef = ref<HTMLElement | null>(null)
+let animation: gsap.core.Tween | null = null
+let scrollTrigger: any = null
 
-if (typeof document !== 'undefined' && !document.getElementById('experience-card-animations')) {
-  const styleSheet = document.createElement("style");
-  styleSheet.id = 'experience-card-animations';
-  styleSheet.type = "text/css";
-  styleSheet.innerText = fadeInUpKeyframes;
-  document.head.appendChild(styleSheet);
+const baseDelay = 0.08 // base para stagger
+const baseDuration = 0.7
+const yOffset = 48
+
+const { manager } = useScrollTrigger()
+
+const animateIn = () => {
+  if (!cardRef.value) return
+  animation = gsap.fromTo(
+    cardRef.value,
+    { opacity: 0, y: yOffset },
+    {
+      opacity: 1,
+      y: 0,
+      duration: baseDuration,
+      ease: 'power4.out',
+      delay: props.staggerIndex ? props.staggerIndex * baseDelay : 0,
+      overwrite: 'auto',
+    }
+  )
 }
+
+const animateOut = () => {
+  if (!cardRef.value) return
+  animation = gsap.to(cardRef.value, {
+    opacity: 0,
+    y: yOffset * 0.5,
+    duration: 0.5,
+    ease: 'power4.in',
+    overwrite: 'auto',
+  })
+}
+
+const setupScrollTrigger = () => {
+  if (!cardRef.value) return
+  if (!manager?.isReady()) return
+  // Limpiar triggers previos
+  if (scrollTrigger) scrollTrigger.kill()
+  scrollTrigger = gsap.context(() => {
+    scrollTrigger = gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: cardRef.value,
+          start: 'top 85%',
+          end: 'bottom 10%',
+          toggleActions: 'play reverse play reverse',
+          onEnter: animateIn,
+          onEnterBack: animateIn,
+          onLeave: animateOut,
+          onLeaveBack: animateOut,
+          // markers: true, // para debug visual
+        },
+      })
+  }, cardRef)
+}
+
+onMounted(() => {
+  nextTick(() => {
+    if (manager?.isReady()) {
+      setupScrollTrigger()
+    } else {
+      setTimeout(setupScrollTrigger, 200) // fallback si manager tarda
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  if (scrollTrigger) scrollTrigger.kill()
+  if (animation) animation.kill()
+})
+
+// Reaplicar trigger si cambia el experience
+watch(() => props.experience, () => {
+  nextTick(() => {
+    setupScrollTrigger()
+  })
+})
 </script>
 
 <style scoped>
-/* Add prefers-reduced-motion for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .achievement-item {
-    animation-name: none !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* Fallback keyframes */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Performance optimizations */
+/* Eliminar animaciones CSS previas, dejar solo optimizaciones y transiciones visuales */
 .experience-card {
-  will-change: transform, box-shadow;
+  will-change: transform, box-shadow, opacity;
   backface-visibility: hidden;
+  transition: box-shadow 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* Smooth transitions */
 * {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
