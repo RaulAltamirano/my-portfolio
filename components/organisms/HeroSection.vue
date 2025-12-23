@@ -1,11 +1,12 @@
 <template>
   <section 
-    id="home"
-    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50/95 via-gray-50/95 to-gray-100 dark:from-gray-900/95 dark:via-gray-900/95 dark:to-gray-800 pt-20 md:pt-24 motion-safe:animate-fade-in"
+    id="hero"
+    class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24 motion-safe:animate-fade-in"
     role="region"
     aria-label="Hero section with introduction and brand showcase"
   >
-
+    <!-- Section Background -->
+    <SectionBackground section="hero" />
 
     <!-- Content Container -->
     <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +18,12 @@
             :initial="{ opacity: 0, y: 20 }"
             :animate="{ opacity: 1, y: 0 }"
             :transition="{ duration: 0.6, delay: 0.2 }"
-            class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full bg-gradient-to-r from-gray-800/10 to-gray-900/10 dark:from-gray-100/10 dark:to-gray-200/10 text-gray-700 dark:text-gray-300 border border-gray-200/20 dark:border-gray-700/20 shadow-sm hover:shadow-md transition-all duration-300"
+            class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-full border shadow-sm hover:shadow-md transition-all duration-300"
+            :class="[
+              isDark 
+                ? 'bg-slate-800/80 text-slate-300 border-slate-700/60' 
+                : 'bg-slate-100/80 text-slate-700 border-slate-200/60'
+            ]"
           >
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -31,7 +37,10 @@
             :animate="{ opacity: 1, y: 0 }"
             :transition="{ duration: 0.6, delay: 0.4 }"
             tag="h1"
-            class="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight relative"
+            class="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight relative transition-colors duration-300"
+            :class="[
+              isDark ? 'text-white' : 'text-slate-900'
+            ]"
           >
             <span 
               class="relative inline-block transform-gpu hover:scale-105 transition-transform duration-500"
@@ -52,7 +61,10 @@
             :animate="{ opacity: 1, y: 0 }"
             :transition="{ duration: 0.6, delay: 0.6 }"
             tag="p"
-            class="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed font-medium max-w-2xl transition-colors duration-300"
+            class="text-xl sm:text-2xl leading-relaxed font-medium max-w-2xl transition-colors duration-300"
+            :class="[
+              isDark ? 'text-slate-300' : 'text-slate-600'
+            ]"
           >
             <span class="typing-text">{{ description }}</span>
           </Motion>
@@ -67,7 +79,12 @@
           >
             <a
               href="#projects"
-              class="group relative inline-flex items-center justify-center px-8 py-4 rounded-xl bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/50 dark:border-gray-700/50 overflow-hidden backdrop-blur-sm hover:backdrop-blur-lg"
+              class="group relative inline-flex items-center justify-center px-8 py-4 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 border overflow-hidden backdrop-blur-sm hover:backdrop-blur-lg"
+              :class="[
+                isDark 
+                  ? 'bg-slate-800/80 text-white border-slate-700/50 hover:bg-slate-700/80' 
+                  : 'bg-white/80 text-slate-900 border-slate-200/50 hover:bg-white/90'
+              ]"
             >
               <span class="relative z-10 flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -78,7 +95,14 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </span>
-              <div class="absolute inset-0 bg-gradient-to-r from-gray-500/[.1] to-gray-400/[.1] transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 transition-colors duration-300"></div>
+              <div 
+                class="absolute inset-0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 transition-colors duration-300"
+                :class="[
+                  isDark 
+                    ? 'bg-gradient-to-r from-slate-600/[.1] to-slate-500/[.1]' 
+                    : 'bg-gradient-to-r from-slate-500/[.1] to-slate-400/[.1]'
+                ]"
+              ></div>
             </a>
 
             <a
@@ -94,7 +118,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </span>
-              <div class="absolute inset-0 bg-gradient-to-r from-gray-100/[.2] to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 transition-colors duration-300"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-white/[.2] to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 transition-colors duration-300"></div>
             </a>
           </Motion>
         </div>
@@ -111,9 +135,28 @@
           tag="div"
           class="flex flex-col items-center space-y-2"
         >
-          <span class="text-sm text-gray-500 dark:text-gray-400">Explora más</span>
-          <div class="relative px-6 py-3 bg-white/[.9] dark:bg-gray-900/[.9] backdrop-blur-sm rounded-lg border border-gray-200/[.3] dark:border-gray-700/[.3] transition-colors duration-300">
-            <div class="w-6 h-10 border-2 border-gray-300 dark:border-gray-600 rounded-full p-1">
+          <span 
+            class="text-sm transition-colors duration-300"
+            :class="[
+              isDark ? 'text-slate-400' : 'text-slate-500'
+            ]"
+          >
+            Explora más
+          </span>
+          <div 
+            class="relative px-6 py-3 backdrop-blur-sm rounded-lg border transition-colors duration-300"
+            :class="[
+              isDark 
+                ? 'bg-slate-900/[.9] border-slate-700/[.3]' 
+                : 'bg-white/[.9] border-slate-200/[.3]'
+            ]"
+          >
+            <div 
+              class="w-6 h-10 border-2 rounded-full p-1"
+              :class="[
+                isDark ? 'border-slate-600' : 'border-slate-300'
+              ]"
+            >
               <div class="w-1.5 h-1.5 bg-gradient-to-b from-blue-600 to-cyan-600 rounded-full mx-auto animate-scroll"></div>
             </div>
           </div>
@@ -126,7 +169,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Motion } from '@motionone/vue'
-import BackgroundEffect from '~/components/molecules/BackgroundEffect.vue'
+import SectionBackground from '~/components/molecules/SectionBackground.vue'
+import { useDarkMode } from '~/composables/useDarkMode'
+
+// Importar el composable de dark mode
+const { isDark } = useDarkMode()
 
 // Props
 const props = defineProps<{
